@@ -20,7 +20,7 @@ def plot_performance(portfolio_cumulative):
         title='',
         xaxis_title='Date',
         yaxis_title='Cumulative Value',
-        template='plotly_white',
+        template='plotly_dark',
         height=550,
         margin=dict(l=50, r=50, t=30, b=50),
         hovermode='x unified',
@@ -63,7 +63,7 @@ def plot_pie(portfolio_df_sorted, col):
         color_discrete_sequence=colors,
         #hover_data=['Company Name', 'Weight (%)'],
         labels={'Weight (%)': 'Weight (%)'},
-        template='plotly_white'
+        template='plotly_dark'
     )
 
     fig.update_traces(

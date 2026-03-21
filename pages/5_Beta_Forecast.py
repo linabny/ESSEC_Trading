@@ -142,7 +142,7 @@ def main():
         width = 1000,
         xaxis_title="Date",
         yaxis_title="Price ($)",
-        template="plotly_white"
+        template="plotly_dark"
     )
 
     # Display graph in Streamlit
