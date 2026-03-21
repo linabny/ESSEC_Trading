@@ -77,7 +77,7 @@ def main():
 
     st.title("Portfolio visualizer")
 
-    description = "Portfolio Visualizer allows users to create and customize their own investment portfolio. The choice of companies can be made by filtering by benchmark indices, searching directly for the name in the search bar, or selecting from those already added to their watch-list. The user must assign a specific weight to each company, corresponding to its percentage in the portfolio. π²Trading then generates a summary table with the main portfolio statistics, historical YTD performance, as well as a chart illustrating the distribution of weights between different companies. The portfolio is automatically saved for later use in the Portfolio Optimizer tab."
+    description = "Portfolio Visualizer allows users to create and customize their own investment portfolio. The choice of companies can be made by filtering by benchmark indices, searching directly for the name in the search bar, or selecting from those already added to their watch-list. The user must assign a specific weight to each company, corresponding to its percentage in the portfolio. ESSEC Trading then generates a summary table with the main portfolio statistics, historical YTD performance, as well as a chart illustrating the distribution of weights between different companies. The portfolio is automatically saved for later use in the Portfolio Optimizer tab."
 
     justified_description = f"""
     <div style='text-align: justify; text-justify: inter-word;'>

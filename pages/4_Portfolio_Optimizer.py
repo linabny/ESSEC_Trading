@@ -6,8 +6,8 @@ import yfinance as yf
 import plotly.graph_objs as go
 import numpy as np
 from utils.graph_utils import plot_performance, plot_pie
-from utils.optimizer_utils import calculate_PP, get_risk_free_rate
-from utils.optimizer_utils import calculate_FE, plot_FE, plot_portfolio_performance
+from utils.optimizer_utils import calculate_portfolio_performance, get_risk_free_rate
+from utils.optimizer_utils import calculate_efficient_frontier, plot_efficient_frontier, plot_portfolio_performance
 
 # Efficient Frontier coded using: https://youtu.be/Isutk-wqJfE?si=a2HVgMUsLGivkm0E
 
@@ -16,7 +16,7 @@ description_page = (
     "created in the Portfolio Visualizer section for in-depth analysis. The "
     "portfolio is summarized through a summary table of the main "
     "statistics and a chart illustrating the distribution of weights among "
-    "companies. Next, π² Trading calculates the efficient frontier using "
+    "companies. Next, ESSEC Trading calculates the efficient frontier using "
     "Modern Portfolio Theory to optimize returns. The platform "
     "then displays the efficient frontier with the current portfolio position "
     "and proposes an optimal portfolio, either to minimize volatility or to "
@@ -103,7 +103,7 @@ def main():
 
         if len(tickers) > 0:
             try:
-                portfolio_cumulative, portfolio_returns = calculate_PP(
+                portfolio_cumulative, portfolio_returns = calculate_portfolio_performance(
                     tickers,
                     weights,
                     period='1y'
@@ -178,15 +178,15 @@ def main():
         individual_volatility = np.sqrt(np.diag(cov_matrix))
 
         # Simulate portfolios
-        portfolios, min_vol_pf, max_sharpe_pf, current_portfolio_metrics = calculate_FE(
+        portfolios, min_vol_pf, max_sharpe_pf, current_portfolio_metrics = calculate_efficient_frontier(
             returns=returns,
             cov_matrix=cov_matrix,
             risk_free_rate=risk_free_rate,
             portfolio_weights=weights
         )
 
-        # Call the plot_FE function to create the chart
-        fig = plot_FE(
+        # Call the plot_efficient_frontier function to create the chart
+        fig = plot_efficient_frontier(
             portfolios=portfolios,
             min_volatility_portfolio=min_vol_pf,
             max_sharpe_portfolio=max_sharpe_pf,

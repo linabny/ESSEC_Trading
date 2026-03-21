@@ -27,7 +27,7 @@ def main():
     st.title("Beta Forecast")
 
     description = (
-        "Beta Forecast is an advanced feature of π²Trading (currently in beta version) that allows users "
+        "Beta Forecast is an advanced feature of ESSEC Trading (currently in beta version) that allows users "
         "to make accurate predictions of stock prices using the Prophet library. "
         "After selecting a company from an existing list, the user "
         "can set a forecast horizon (from 30 to 365 days). The application retrieves the "

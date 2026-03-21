@@ -26,7 +26,7 @@ def main():
     df = pd.read_csv("Data/data_pisquared.csv")
     
     st.title("Stock Picking")
-    description = "Stock Picking allows users to select the components of their portfolio with a comprehensive view of the companies they want to include. Based on updated and reliable data from the yfinance library, π²Trading guarantees quality information. Users can enter the company name directly or search for it in their reference index, then choose the desired period to display the stock price. The platform then generates a detailed profile including a company description, key data, and essential financial ratios to assess its economic health. Users also have the option to add the company to their watchlist for easy tracking."
+    description = "Stock Picking allows users to select the components of their portfolio with a comprehensive view of the companies they want to include. Based on updated and reliable data from the yfinance library, ESSEC Trading guarantees quality information. Users can enter the company name directly or search for it in their reference index, then choose the desired period to display the stock price. The platform then generates a detailed profile including a company description, key data, and essential financial ratios to assess its economic health. Users also have the option to add the company to their watchlist for easy tracking."
 
     justified_description = f"""
     <div style='text-align: justify; text-justify: inter-word;'>

@@ -4,7 +4,7 @@ import streamlit as st
 # Streamlit code was created with the help of https://docs.streamlit.io/ documentation
 
 st.set_page_config(
-    page_title="π²Trading",
+    page_title="ESSEC Trading",
     page_icon="💹",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -32,15 +32,14 @@ st.markdown("""
 
 st.markdown('''
         <h1 class="title">
-            <span class="pi">π</span><span class="superscript">²</span>
-            <span class="trading">Trading</span>
+            <span class="trading">ESSEC Trading</span>
         </h1>
     ''', unsafe_allow_html=True)
 st.markdown('<h2 class="subtitle">A new way of investing</h2>', unsafe_allow_html=True)
 
 st.markdown('<div class="section" data-aos="fade-up">', unsafe_allow_html=True)
 
-intro = "Welcome to π² Trading, the platform designed to transform your financial strategies into true success.\n\nCombining cutting-edge technology with accessibility, π² Trading puts powerful and intuitive tools in your hands, perfect for both novice and expert investors looking to maximize their potential. Designed to provide a smooth experience, this dynamic platform, developed with Streamlit, stands out with its modern and user-friendly interface, making each feature simple to access and pleasant to use.\n\nThrough innovative modules such as Stock Picking, Portfolio Visualizer, Portfolio Optimizer, and Beta π², it offers you a complete toolkit to analyze, create, simulate, and optimize your investments with precision. Drawing on reliable data from recognized sources such as Yahoo Finance, π² Trading guarantees up-to-date and relevant information, helping you make informed decisions. Through the integration of modern financial theories and advanced simulations, you can explore new opportunities and refine your portfolios in an environment entirely designed to meet your needs.\n\nJoin π² Trading now and give a new dimension to your investments.\n\nπ² Trading: a new way of investing.""
+intro = "Welcome to ESSEC Trading, the platform designed to transform your financial strategies into true success.\n\nCombining cutting-edge technology with accessibility, ESSEC Trading puts powerful and intuitive tools in your hands, perfect for both novice and expert investors looking to maximize their potential. Designed to provide a smooth experience, this dynamic platform, developed with Streamlit, stands out with its modern and user-friendly interface, making each feature simple to access and pleasant to use.\n\nThrough innovative modules such as Stock Picking, Portfolio Visualizer, Portfolio Optimizer, and Beta Forecast, it offers you a complete toolkit to analyze, create, simulate, and optimize your investments with precision. Drawing on reliable data from recognized sources such as Yahoo Finance, ESSEC Trading guarantees up-to-date and relevant information, helping you make informed decisions. Through the integration of modern financial theories and advanced simulations, you can explore new opportunities and refine your portfolios in an environment entirely designed to meet your needs.\n\nJoin ESSEC Trading now and give a new dimension to your investments.\n\nESSEC Trading: a new way of investing."
 
 justified_intro = f"""
     <div style='text-align: justify; text-justify: inter-word;'>
@@ -53,7 +52,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section" data-aos="fade-up">', unsafe_allow_html=True)
 st.markdown('<h2>Services</h2>', unsafe_allow_html=True)
-    services = [
+services = [
         {"name": "Stock Picking", "description": "The solution for building a tailor-made portfolio, with reliable data for informed decisions.", "icon": "📈"},
         {"name": "Portfolio Visualizer", "description": "Analyze your portfolio with clear visual tools and powerful insights to maximize your performance.", "icon": "📊"},
         {"name": "Portfolio Optimizer", "description": "Optimize your portfolio through the efficient frontier, to maximize your returns and reduce your risks.", "icon": "⚙️"},
