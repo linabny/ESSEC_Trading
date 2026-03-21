@@ -10,7 +10,7 @@ import numpy as np
 
 
 def main():
-    #CSS pour ajuster la largeur de la zone de contenu
+    # CSS to adjust content area width
     st.markdown(
         """
         <style>
@@ -27,16 +27,15 @@ def main():
     st.title("Beta Forecast")
 
     description = (
-        "Beta Forecast est une fonctionnalité avancée de π²Trading (actuellement en version beta) qui permet aux utilisateurs "
-        "de réaliser des prévisions précises des prix d'actions à l'aide de la biliothèque Prophet. "
-        "Après avoir sélectionné une entreprise parmi une liste préexistante, l'utilisateur "
-        "peut définir un horizon de prévision (de 30 à 365 jours). L'application récupère les "
-        "données historiques correspondantes et génère des prévisions accompagnées d'intervalles "
-        "de confiance. Un tableau des métriques clés, incluant le prix actuel, les prévisions de "
-        "prix minimum, maximum, et moyen, est affiché pour faciliter l'analyse. Enfin, une jauge "
-        "de recommandation intuitive aide à interpréter les prévisions et à prendre des décisions "
-        "d'investissement stratégiques. L'utilisateur peut également télécharger les résultats "
-        "en format CSV pour une exploration ultérieure."
+        "Beta Forecast is an advanced feature of π²Trading (currently in beta version) that allows users "
+        "to make accurate predictions of stock prices using the Prophet library. "
+        "After selecting a company from an existing list, the user "
+        "can set a forecast horizon (from 30 to 365 days). The application retrieves the "
+        "corresponding historical data and generates forecasts accompanied by confidence intervals. "
+        "A table of key metrics, including current price, minimum, maximum, and average price forecasts, "
+        "is displayed to facilitate analysis. Finally, an intuitive recommendation gauge helps interpret "
+        "the forecasts and make strategic investment decisions. The user can also download the results "
+        "in CSV format for further exploration."
     )
 
     justified_description = f"""
@@ -50,12 +49,12 @@ def main():
 
     df = pd.read_csv("Data/data_pisquared.csv")
 
-    #entreprise = st.selectbox("Choisissez une entreprise :", df['Company'])
-    #Sélection de l'indice
-    st.header("Filtrer par Indice")
+    #company = st.selectbox("Select a company:", df['Company'])
+    # Filter by Index
+    st.header("Filter by Index")
     indices = df['Ind'].unique().tolist()
     selected_indices = st.multiselect(
-        "Choisissez un ou plusieurs indices",
+        "Select one or more indices",
         options=indices,
         default=indices 
     )##
@@ -66,17 +65,17 @@ def main():
         filtered_companies = df.copy()
 
     if filtered_companies.empty:
-        st.warning("Aucune entreprise trouvée pour les indices sélectionnés.")
+        st.warning("No companies found for the selected indices.")
 
-    #Sélection entreprise
+    # Select company
     companies = filtered_companies["Company"].tolist()
-    entreprise = st.selectbox("Choisissez une entreprise :", companies)
+    company = st.selectbox("Select a company:", companies)
 
-    #Afficher le ticker associé
-    ticker = filtered_companies[filtered_companies["Company"] == entreprise]["Ticker"].values[0]
+    # Display associated ticker
+    ticker = filtered_companies[filtered_companies["Company"] == company]["Ticker"].values[0]
 
-    #Pour que l'utilisateur puisse choisir la période de prévision
-    horizon = st.slider("Horizon de prévision (en jours) :", min_value=30, max_value=365, value=90)
+    # Allow user to choose the forecast period
+    horizon = st.slider("Forecast Horizon (in days):", min_value=30, max_value=365, value=90)
 
     #ticker = df.loc[df['Company'] == entreprise, 'Ticker'].values[0]
 
@@ -87,82 +86,82 @@ def main():
 
     data = data[['Close']].reset_index()
 
-    #Convention pour prophet : y représente la valeur qu'on veut forecast et ds la date 
+    # Convention for Prophet: y represents the value we want to forecast and ds the date
     data.columns = ['ds', 'y']
 
-    #On doit garder la data dans un format YYYY-MM-DD donc on supprime le fuseau horaire : 
+    # Keep data in YYYY-MM-DD format so we remove the time zone:
     data['ds'] = data['ds'].dt.tz_localize(None)
 
-    #On initialise le modèle et on l'ajuste aux données
+    # Initialize the model and fit it to the data
     m = Prophet()
     m.fit(data)
 
-    #On ajoute des nouvelles dates aux dates qu'on a déjà et correspond à la période où on veut forecast le prix
+    # Add new dates to the dates we already have corresponding to the forecast period
     future = m.make_future_dataframe(periods=horizon)
 
     forecast = m.predict(future)
 
     fig = go.Figure()
 
-    #Scatter plot des données historiques
+    # Scatter plot of historical data
     fig.add_trace(go.Scatter(
         x=data['ds'], y=data['y'],
         mode='lines',
-        name="Données historiques",
+        name="Historical Data",
         line=dict(color="black")
     ))
 
-    #Scatter plot des données prédites
+    # Scatter plot of predicted data
     fig.add_trace(go.Scatter(
         x=forecast['ds'], y=forecast['yhat'],
         mode='lines',
-        name="Prédictions",
+        name="Predictions",
         line=dict(color="blue")
     ))
 
-    #Intervalles de confiance
+    # Confidence intervals
     fig.add_trace(go.Scatter(
         x=forecast['ds'], y=forecast['yhat_upper'],
         fill=None,
         mode='lines',
         line=dict(color='lightblue', dash='dot'),
-        name="Intervalle supérieur"
+        name="Upper Interval"
     ))
     fig.add_trace(go.Scatter(
         x=forecast['ds'], y=forecast['yhat_lower'],
         fill='tonexty',
         mode='lines',
         line=dict(color='lightblue', dash='dot'),
-        name="Intervalle inférieur"
+        name="Lower Interval"
     ))
 
-    #Titres
+    # Titles
     fig.update_layout(
-        title="Prédiction des Prix Futures",
+        title="Future Price Prediction",
         height=600,
         width = 1000,
         xaxis_title="Date",
-        yaxis_title="Prix ($)",
+        yaxis_title="Price ($)",
         template="plotly_white"
     )
 
-    #Fonction pour afficher graph sur streamlit
+    # Display graph in Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
-    #Récupérer la dernier data de forecast pour ensuite prix max, min et actuel prédits
+    # Retrieve the last forecast data to get max, min and current predicted prices
     last_date = forecast['ds'].iloc[-1]
     last_date_str = last_date.strftime('%Y-%m-%d')
 
-    #Prix close le plus récent pour comparer aux prédictions
+    # Most recent close price to compare to predictions
     last_adjclose = data['y'].iloc[-1]
 
     borne_inf = forecast.loc[forecast['ds'] == last_date_str]['yhat_lower'].values[0]
     borne_sup = forecast.loc[forecast['ds'] == last_date_str]['yhat_upper'].values[0]
     prediction = forecast.loc[forecast['ds'] == last_date_str]['yhat'].values[0]
 
-    st.write(f"### Statistiques de la prédiction à {horizon} jours")
+    st.write(f"### Prediction Statistics at {horizon} days")
     metrics_labels = [
-        "Prix actuel", "Prix prédit", "Prix prédit minimum", "Prix prédit maximum"
+        "Current Price", "Predicted Price", "Minimum Predicted Price", "Maximum Predicted Price"
     ]
     metrics_values = [
         f"{last_adjclose:.2f}", f"{prediction:.2f}", f"{borne_inf:.2f}", f"{borne_sup:.2f}"
@@ -175,23 +174,23 @@ def main():
         with col:
             st.metric(label, value)
 
-    #Variation pourcentage prix
+    # Price percentage variation
     percentage_delta = ((prediction - last_adjclose) / last_adjclose) * 100
 
-    #Map variation à l'échelle 0-100
-    niveau = max(min(50 + percentage_delta * 5, 100), 0)  
+    # Map variation to scale 0-100
+    level = max(min(50 + percentage_delta * 5, 100), 0)  
 
-    #étiquette et couleur à afficher en fonction du niveau
-    if 80 <= niveau <= 100:
+    # Label and color to display according to the level
+    if 80 <= level <= 100:
         recommendation = "Strong Buy"
         text_color = "darkgreen"
-    elif 60 <= niveau < 80:
+    elif 60 <= level < 80:
         recommendation = "Buy"
         text_color = "green"
-    elif 40 <= niveau < 60:
+    elif 40 <= level < 60:
         recommendation = "Hold"
         text_color = "orange"
-    elif 20 <= niveau < 40:
+    elif 20 <= level < 40:
         recommendation = "Sell"
         text_color = "red"
     else:
@@ -200,11 +199,11 @@ def main():
 
     num_levels = 100 
 
-    #Ce graphique à été réalisé à l'aide de ChatGPT
+    # This gauge was created with the help of ChatGPT
     fig_gauge = go.Figure(go.Indicator(
         mode="gauge", 
-        value=niveau,
-        title={'text': "Recommandation"}, 
+        value=level,
+        title={'text': "Recommendation"}, 
         gauge={
             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "black"},
             'bar': {'color': "black", 'thickness': 0.2},
@@ -216,12 +215,12 @@ def main():
             'threshold': {
                 'line': {'color': "black", 'width': 4},
                 'thickness': 0.75,
-                'value': niveau
+                'value': level
             }
         }
     ))
 
-    #Ajouter le texte sous le graphique
+    # Add text below the graph
     fig_gauge.add_trace(go.Scatter(
         x=[0.5],
         y=[-1.2],  
@@ -239,12 +238,12 @@ def main():
 
     st.plotly_chart(fig_gauge, use_container_width=True)
 
-    #Permet à l'utilsateur de télécharger le dataframe des prévisions en CSV
+    # Allow user to download the forecast dataframe as CSV
     csv = forecast.to_csv(index=False)
     st.download_button(
-        label="Télécharger les prévisions en CSV",
+        label="Download Forecasts as CSV",
         data=csv,
-        file_name=f"previsions_{entreprise}.csv",
+        file_name=f"forecasts_{company}.csv",
         mime='text/csv'
     )
 

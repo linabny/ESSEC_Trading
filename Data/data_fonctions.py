@@ -2,46 +2,46 @@ import pandas as pd
 import folium
 
 
-def obtenir_liste_entreprises(url, nom_indice):
+def get_company_list(url, index_name):
     """
-    Récupère la liste des entreprises d'un indice boursier spécifié depuis Wikipedia.
+    Retrieves the list of companies from a specified stock index from Wikipedia.
 
-    Paramètres :
-    - url (str) : URL de la page Wikipedia contenant la liste des entreprises de l'indice boursier.
-    - nom_indice (str) : Nom de l'indice boursier.
+    Parameters:
+    - url (str): URL of the Wikipedia page containing the list of companies in the stock index.
+    - index_name (str): Name of the stock index.
 
-    Retour :
-    - DataFrame contenant la liste des entreprises pour l'indice boursier spécifié.
+    Returns:
+    - DataFrame containing the list of companies for the specified stock index.
     """
-    # Dictionnaire pour mapper les noms des indices aux indices de leurs tables sur Wikipedia
+    # Dictionary to map index names to their table indices on Wikipedia
     index_table_map = {
-        'CAC 40': 4,      # 5è tableau pour le CAC 40
-        'S&P 500': 0,     # 1er tableau pour le S&P 500
-        'DAX': 4,         # 5è tableau pour le DAX
-        'FTSE MIB': 1,    # 2è tableau pour le FTSE MIB
-        'FTSE 100': 4,    # 4è tableau pour le FTSE 100
-        'IBEX 35': 2      # 2è tableau pour le IBEX 35
+        'CAC 40': 4,      # 5th table for CAC 40
+        'S&P 500': 0,     # 1st table for S&P 500
+        'DAX': 4,         # 5th table for DAX
+        'FTSE MIB': 1,    # 2nd table for FTSE MIB
+        'FTSE 100': 4,    # 4th table for FTSE 100
+        'IBEX 35': 2      # 2nd table for IBEX 35
     }
 
-    if nom_indice in index_table_map:
+    if index_name in index_table_map:
         try:
-            df = pd.read_html(url)[index_table_map[nom_indice]]
+            df = pd.read_html(url)[index_table_map[index_name]]
             return df
         except Exception as e:
-            raise Exception(f"Une erreur s'est produite lors de la récupération des données depuis {url} : {e}")
+            raise Exception(f"An error occurred while retrieving data from {url}: {e}")
     else:
-        raise ValueError(f"Le nom de l'indice '{nom_indice}' n'est pas reconnu. Veuillez utiliser l'un des suivants : {list(index_table_map.keys()) + ['Russell 2000']}")
+        raise ValueError(f"The index name '{index_name}' is not recognized. Please use one of the following: {list(index_table_map.keys()) + ['Russell 2000']}")
 
 
-def nettoyage_snp500(df_snp500):
+def clean_snp500(df_snp500):
     """
-    Récupère les données d'un indice boursier et les nettoie.
+    Retrieves and cleans data from a stock index.
 
-    Paramètres :
-    - df_snp500 (DataFrame) : DataFrame contenant les données de l'indice boursier.
+    Parameters:
+    - df_snp500 (DataFrame): DataFrame containing the stock index data.
 
-    Retour :
-    - DataFrame contenant les données de l'indice boursier nettoyées.
+    Returns:
+    - DataFrame containing the cleaned stock index data.
     """
     df_snp500 = df_snp500.drop(columns=[
         'GICS Sector', 'GICS Sub-Industry', 'Headquarters Location', 'Date added', 'CIK', 'Founded'
@@ -55,36 +55,36 @@ def nettoyage_snp500(df_snp500):
     return df_snp500
 
 
-def nettoyage_cac40(df_cac40):
+def clean_cac40(df_cac40):
     """
-    Récupère les données d'un indice boursier et les nettoie.
+    Retrieves and cleans data from a stock index.
 
-    Paramètres :
-    - df_cac40 (DataFrame) : DataFrame contenant les données de l'indice boursier.
+    Parameters:
+    - df_cac40 (DataFrame): DataFrame containing the stock index data.
 
-    Retour :
-    - DataFrame contenant les données de l'indice boursier nettoyées.
+    Returns:
+    - DataFrame containing the cleaned stock index data.
     """
     df_cac40 = df_cac40.drop(columns=[
         'Sector', 'GICS Sub-Industry',
         ])
-    cols = df_cac40.columns.tolist()        # Récupère la liste des noms de colonnes
-    cols = [cols[1]] + cols[:1] + cols[2:]  # Réarrange les colonnes
-    df_cac40 = df_cac40[cols]               # Réapplique l'ordre des colonnes au DataFrame
+    cols = df_cac40.columns.tolist()        # Get the list of column names
+    cols = [cols[1]] + cols[:1] + cols[2:]  # Reorder the columns
+    df_cac40 = df_cac40[cols]               # Reapply the column order to the DataFrame
     df_cac40['Ind'] = 'CAC 40'
 
     return df_cac40
 
 
-def nettoyage_dax(df_dax):
+def clean_dax(df_dax):
     """
-    Récupère les données d'un indice boursier et les nettoie.
+    Retrieves and cleans data from a stock index.
 
-    Paramètres :
-    - df_dax (DataFrame) : DataFrame contenant les données de l'indice boursier.
+    Parameters:
+    - df_dax (DataFrame): DataFrame containing the stock index data.
 
-    Retour :
-    - DataFrame contenant les données de l'indice boursier nettoyées.
+    Returns:
+    - DataFrame containing the cleaned stock index data.
     """
     df_dax = df_dax.drop(columns=[
         'Logo', 'Prime Standard Sector', 'Index weighting (%)1', 'Employees', 'Founded'
@@ -97,15 +97,15 @@ def nettoyage_dax(df_dax):
     return df_dax
 
 
-def nettoyage_ftsemib(df_ftsemib):
+def clean_ftsemib(df_ftsemib):
     """
-    Récupère les données d'un indice boursier et les nettoie.
+    Retrieves and cleans data from a stock index.
 
-    Paramètres :
-    - df_ftsemib (DataFrame) : DataFrame contenant les données de l'indice boursier.
+    Parameters:
+    - df_ftsemib (DataFrame): DataFrame containing the stock index data.
 
-    Retour :
-    - DataFrame contenant les données de l'indice boursier nettoyées.
+    Returns:
+    - DataFrame containing the cleaned stock index data.
     """
     df_ftsemib = df_ftsemib.drop(columns=[
         'ISIN', 'ICB Sector'
@@ -118,15 +118,15 @@ def nettoyage_ftsemib(df_ftsemib):
     return df_ftsemib
 
 
-def nettoyage_ftse100(df_ftse100):
+def clean_ftse100(df_ftse100):
     """
-    Récupère les données d'un indice boursier et les nettoie.
+    Retrieves and cleans data from a stock index.
 
-    Paramètres :
-    - df_ftse100 (DataFrame) : DataFrame contenant les données de l'indice boursier.
+    Parameters:
+    - df_ftse100 (DataFrame): DataFrame containing the stock index data.
 
-    Retour :
-    - DataFrame contenant les données de l'indice boursier nettoyées.
+    Returns:
+    - DataFrame containing the cleaned stock index data.
     """
     df_ftse100 = df_ftse100.drop(columns=[
         'FTSE industry classification benchmark sector[24]'
@@ -140,15 +140,15 @@ def nettoyage_ftse100(df_ftse100):
     return df_ftse100
 
 
-def nettoyage_ibex35(df_ibex35):
+def clean_ibex35(df_ibex35):
     """
-    Récupère les données d'un indice boursier et les nettoie.
+    Retrieves and cleans data from a stock index.
 
-    Paramètres :
-    - df_ibex35 (DataFrame) : DataFrame contenant les données de l'indice boursier.
+    Parameters:
+    - df_ibex35 (DataFrame): DataFrame containing the stock index data.
 
-    Retour :
-    - DataFrame contenant les données de l'indice boursier nettoyées.
+    Returns:
+    - DataFrame containing the cleaned stock index data.
     """
     df_ibex35 = df_ibex35.drop(columns=[
         'Sector'
@@ -160,16 +160,16 @@ def nettoyage_ibex35(df_ibex35):
 
 def map_index(df):
     """
-    Associe des indices boursiers à leurs pays, calcule la répartition des entreprises par pays,
-    et génère une carte interactive avec les données visualisées.
+    Associates stock indices with their countries, calculates the distribution of companies by country,
+    and generates an interactive map with the visualized data.
 
     Arguments:
-    - df (pandas.DataFrame): DataFrame contenant les indices.
+    - df (pandas.DataFrame): DataFrame containing the indices.
 
-    Retourne:
-    - folium.Map: Carte interactive avec les marqueurs des entreprises par pays.
+    Returns:
+    - folium.Map: Interactive map with markers for companies by country.
     """
-    # Définir le dictionnaire des indices aux pays
+    # Define the dictionary of indices to countries
     index_to_country = {
         'S&P 500': 'United States',
         'CAC 40': 'France',
@@ -179,27 +179,27 @@ def map_index(df):
         'IBEX 35': 'Spain'
     }
 
-    # Définir les coordonnées pour les capitales de ces pays
+    # Define coordinates for the capitals of these countries
     country_coordinates = {
         'United States': (38.9072, -77.0369),  # Washington, D.C.
         'France': (48.8566, 2.3522),           # Paris
         'Germany': (52.5200, 13.4050),         # Berlin
         'Italy': (41.9028, 12.4964),           # Rome
-        'United Kingdom': (51.5074, -0.1278),  # Londres
+        'United Kingdom': (51.5074, -0.1278),  # London
         'Spain': (40.4168, -3.7038)            # Madrid
     }
 
-    # Ajouter une colonne 'Country' basée sur l'indice
+    # Add a 'Country' column based on the index
     df['Country'] = [index_to_country[ind] for ind in df['Ind']]
 
-    # Compter le nombre d'entreprises par pays
+    # Count the number of companies per country
     country_counts = df['Country'].value_counts().reset_index()
     country_counts.columns = ['Country', 'Count']
 
-    # Créer une carte (GPT)
+    # Create a map (GPT)
     map = folium.Map(location=[48.8566, 2.3522], zoom_start=3)
 
-    # Ajouter des données par pays (GPT)
+    # Add data by country (GPT)
     for _, row in country_counts.iterrows():
         country = row['Country']
         count = row['Count']
@@ -207,13 +207,13 @@ def map_index(df):
             folium.CircleMarker(
                 location=country_coordinates[country],
                 radius=10,
-                popup=f"{country}: {count} entreprises",
+                popup=f"{country}: {count} companies",
                 color='blue',
                 fill=True,
                 fill_color='blue'
             ).add_to(map)
 
-    # Afficher la carte
+    # Save the map
     map.save('index.html')
 
     return map

@@ -1,7 +1,7 @@
 import streamlit as st
 
-#L'ENSEMBLE DU CSS ET HTML CONTENU DANS LE PROJET ONT ETE ENTIEREMENT REALISE PAR CHATGPT
-#Le code Streamlit a été réalisé à l'aide de la documentation https://docs.streamlit.io/
+# ALL CSS AND HTML CONTENT IN THIS PROJECT WAS ENTIRELY CREATED BY CHATGPT
+# Streamlit code was created with the help of https://docs.streamlit.io/ documentation
 
 st.set_page_config(
     page_title="π²Trading",
@@ -19,7 +19,7 @@ css_content = load_css_file("style/styles.css")
 
 st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 
-#Bibliothèque pour l'animation de "survol" des boutons
+# Library for "hover" animation of buttons
 st.markdown("""
 <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
@@ -40,7 +40,7 @@ st.markdown('<h2 class="subtitle">A new way of investing</h2>', unsafe_allow_htm
 
 st.markdown('<div class="section" data-aos="fade-up">', unsafe_allow_html=True)
 
-intro = "Bienvenue sur π² Trading, la plateforme conçue pour transformer vos stratégies financières en véritables succès.\n\nAlliant technologie de pointe et accessibilité, π² Trading met entre vos mains des outils performants et intuitifs, parfaits pour les investisseurs débutants comme pour les experts souhaitant maximiser leur potentiel. Pensée pour offrir une expérience fluide, cette plateforme dynamique, développée sur Streamlit, se distingue par son interface moderne et conviviale, rendant chaque fonctionnalité simple d'accès et agréable à utiliser.\n\nÀ travers des modules innovants comme Stock Picking, Portfolio Visualizer, Portfolio Optimizer et Beta π², elle vous propose une boîte à outils complète pour analyser, créer, simuler et optimiser vos investissements avec précision. En s'appuyant sur des données fiables issues de sources reconnues telles que finance, π² Trading garantit une information à jour et pertinente, vous aidant à prendre des décisions éclairées. Grâce à l'intégration des théories financières modernes et des simulations avancées, vous pouvez explorer de nouvelles opportunités et perfectionner vos portefeuilles dans un environnement entièrement pensé pour répondre à vos besoins.\n\nRejoignez π² Trading dès maintenant et donnez une nouvelle dimension à vos investissements.\n\nπ² Trading : a new way of investing."
+intro = "Welcome to π² Trading, the platform designed to transform your financial strategies into true success.\n\nCombining cutting-edge technology with accessibility, π² Trading puts powerful and intuitive tools in your hands, perfect for both novice and expert investors looking to maximize their potential. Designed to provide a smooth experience, this dynamic platform, developed with Streamlit, stands out with its modern and user-friendly interface, making each feature simple to access and pleasant to use.\n\nThrough innovative modules such as Stock Picking, Portfolio Visualizer, Portfolio Optimizer, and Beta π², it offers you a complete toolkit to analyze, create, simulate, and optimize your investments with precision. Drawing on reliable data from recognized sources such as Yahoo Finance, π² Trading guarantees up-to-date and relevant information, helping you make informed decisions. Through the integration of modern financial theories and advanced simulations, you can explore new opportunities and refine your portfolios in an environment entirely designed to meet your needs.\n\nJoin π² Trading now and give a new dimension to your investments.\n\nπ² Trading: a new way of investing.""
 
 justified_intro = f"""
     <div style='text-align: justify; text-justify: inter-word;'>
@@ -52,12 +52,12 @@ st.markdown(justified_intro, unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section" data-aos="fade-up">', unsafe_allow_html=True)
-st.markdown("<h2>Services</h2>", unsafe_allow_html=True)
-services = [
-        {"name": "Stock Picking", "description": "La solution pour construire un portefeuille sur-mesure, avec des données fiables pour des décisions éclairées.", "icon": "📈"},
-        {"name": "Portfolio Visualizer", "description": "Analysez votre portefeuille avec des outils visuels clairs et des insights puissants pour maximiser vos performances.", "icon": "📊"},
-        {"name": "Portfolio Optimizer", "description": "Optimisez votre portefeuille grâce à la frontière d’efficience, pour maximiser vos rendements et réduire vos risques.", "icon": "⚙️"},
-        {"name": "Beta Forecast", "description": "Notre espace innovation, anticipez les prix d'actions grâce à des prévisions avancées pour optimiser vos décisions d'investissement.", "icon": "💰"}
+st.markdown('<h2>Services</h2>', unsafe_allow_html=True)
+    services = [
+        {"name": "Stock Picking", "description": "The solution for building a tailor-made portfolio, with reliable data for informed decisions.", "icon": "📈"},
+        {"name": "Portfolio Visualizer", "description": "Analyze your portfolio with clear visual tools and powerful insights to maximize your performance.", "icon": "📊"},
+        {"name": "Portfolio Optimizer", "description": "Optimize your portfolio through the efficient frontier, to maximize your returns and reduce your risks.", "icon": "⚙️"},
+        {"name": "Beta Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💰"}
     ]
 
 num_services = len(services)
@@ -73,7 +73,7 @@ for i in range(0, num_services, 2):
                         <div class='service-icon'>{service['icon']}</div>
                         <h3>{service['name']}</h3>
                         <p>{service['description']}</p>
-                        <!-- Suppression du bouton "Choose" -->
+                        <!-- Removed "Choose" button -->
                         <!--<button class='button'>Choose</button>-->
                     </div>
                     """, unsafe_allow_html=True)

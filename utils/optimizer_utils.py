@@ -1,4 +1,4 @@
-# Utils pour la page 'Portfolio Optimizer'
+# Utils for 'Portfolio Optimizer' page
 
 import pandas as pd
 import yfinance as yf
@@ -7,31 +7,31 @@ import requests
 import numpy as np
 
 
-def calculate_PP(tickers, weights, period='1y'):
+def calculate_portfolio_performance(tickers, weights, period='1y'):
     """
-    Calcule les performances d'un portefeuille sur une période donnée.
+    Calculates the performance of a portfolio over a given period.
 
-    :param tickers: Liste des tickers des actifs.
-    :param weights: Pondérations des actifs dans le portefeuille.
-    :param period: Période pour télécharger les données (par défaut '1y').
-    :return: Tuple (cumul des rendements du portefeuille, rendements journaliers du portefeuille).
+    :param tickers: List of ticker symbols for assets.
+    :param weights: Weights of the assets in the portfolio.
+    :param period: Period for downloading data (default '1y').
+    :return: Tuple (cumulative portfolio returns, daily portfolio returns).
     """
-    # Téléchargement des prix ajustés des tickers
+    # Download adjusted closing prices for tickers
     data = yf.download(tickers, period=period)['Close']
 
-    # Gérer le cas où un seul ticker est fourni (data devient une série au lieu d'un DataFrame)
+    # Handle the case where only one ticker is provided (data becomes a Series instead of DataFrame)
     if isinstance(data, pd.Series):
         data = data.to_frame()
 
-    # Calcul des rendements journaliers
+    # Calculate daily returns
     returns = data.pct_change().dropna()
 
-    # Calcul des rendements pondérés du portefeuille
+    # Calculate weighted portfolio returns
     weighted_returns = returns.multiply(weights, axis=1)
-    # Somme des rendements pondérés pour chaque jour
+    # Sum of weighted returns for each day
     portfolio_returns = weighted_returns.sum(axis=1)
 
-    # Calcul des rendements cumulés du portefeuille
+    # Calculate cumulative portfolio returns
     portfolio_cumulative = (1 + portfolio_returns).cumprod()
 
     return portfolio_cumulative, portfolio_returns
@@ -39,12 +39,12 @@ def calculate_PP(tickers, weights, period='1y'):
 
 def get_risk_free_rate(api_key="f1f1a2d3abcf1f08e76d3bc4fc1efd19"):
     """
-    Récupère le taux sans risque (rendement des obligations à 10 ans) depuis l'API FRED.
+    Retrieves the risk-free rate (10-year bond yield) from the FRED API.
 
-    Si une erreur survient, retourne un taux par défaut de 2 %.
+    If an error occurs, returns a default rate of 2%.
 
-    :param api_key: Clé API pour accéder à l'API FRED.
-    :return: Taux sans risque sous forme de float (par exemple, 0.02 pour 2 %).
+    :param api_key: API key for accessing the FRED API.
+    :return: Risk-free rate as a float (e.g., 0.02 for 2%).
     """
     url = 'https://api.stlouisfed.org/fred/series/observations'
     params = {
@@ -57,33 +57,33 @@ def get_risk_free_rate(api_key="f1f1a2d3abcf1f08e76d3bc4fc1efd19"):
 
     try:
         response = requests.get(url, params=params)
-        response.raise_for_status()  # Vérifie les erreurs HTTP
+        response.raise_for_status()  # Check for HTTP errors
         data = response.json()
-        # Retourne le premier taux disponible, converti en décimal
+        # Return the first available rate, converted to decimal
         return float(data['observations'][0]['value']) / 100
     except Exception:
-        # Retourne un taux par défaut de 2 % en cas d'erreur
+        # Return a default rate of 2% on error
         return 0.02
 
 
 def calculate_portfolio_metrics(weights, returns, cov_matrix, risk_free_rate):
     """
-    Calcule les métriques d'un portefeuille : rendement attendu, volatilité et ratio de Sharpe.
+    Calculates portfolio metrics: expected return, volatility, and Sharpe ratio.
 
-    :param weights: Liste ou tableau des pondérations des actifs dans le portefeuille.
-    :param returns: Liste ou tableau des rendements attendus des actifs.
-    :param cov_matrix: Matrice de covariance des actifs.
-    :param risk_free_rate: Taux sans risque (float).
-    :return: Tuple (rendement attendu, volatilité, ratio de Sharpe).
+    :param weights: List or array of asset weights in the portfolio.
+    :param returns: List or array of expected asset returns.
+    :param cov_matrix: Covariance matrix of assets.
+    :param risk_free_rate: Risk-free rate (float).
+    :return: Tuple (expected return, volatility, Sharpe ratio).
     """
-    weights = np.array(weights)  # Conversion en tableau NumPy
-    portfolio_return = np.dot(returns, weights)  # Rendement attendu du portefeuille
+    weights = np.array(weights)  # Convert to NumPy array
+    portfolio_return = np.dot(returns, weights)  # Expected portfolio return
 
-    # Calcul de la variance et de la volatilité
+    # Calculate variance and volatility
     portfolio_variance = np.dot(weights, np.dot(cov_matrix, weights))
     portfolio_volatility = np.sqrt(portfolio_variance)
 
-    # Calcul du ratio de Sharpe
+    # Calculate Sharpe ratio
     if portfolio_volatility:
         sharpe_ratio = (portfolio_return - risk_free_rate) / portfolio_volatility
     else:
@@ -94,131 +94,130 @@ def calculate_portfolio_metrics(weights, returns, cov_matrix, risk_free_rate):
 
 def simulate_portfolios(returns, cov_matrix, risk_free_rate, num_portfolios=10000):
     """
-    Génère des portefeuilles aléatoires pour simuler la frontière efficiente.
+    Generates random portfolios to simulate the efficient frontier.
 
-    :param returns: Liste ou tableau des rendements attendus des actifs.
-    :param cov_matrix: Matrice de covariance des actifs.
-    :param risk_free_rate: Taux sans risque (float).
-    :param num_portfolios: Nombre de portefeuilles à simuler (int).
-    :return: Tableau NumPy contenant pondérations, rendements, volatilités et ratios de
-    Sharpe pour chaque portefeuille.
+    :param returns: List or array of expected asset returns.
+    :param cov_matrix: Covariance matrix of assets.
+    :param risk_free_rate: Risk-free rate (float).
+    :param num_portfolios: Number of portfolios to simulate (int).
+    :return: NumPy array containing weights, returns, volatilities, and Sharpe ratios for each portfolio.
     """
     num_assets = len(returns)
-    results = np.zeros((num_portfolios, num_assets + 3))  # Colonnes : pondérations + métriques
+    results = np.zeros((num_portfolios, num_assets + 3))  # Columns: weights + metrics
 
     for i in range(num_portfolios):
-        weights = np.random.random(num_assets)     # Génération de pondérations aléatoires
-        weights /= weights.sum()                   # Normalisation à 1
+        weights = np.random.random(num_assets)     # Generate random weights
+        weights /= weights.sum()                   # Normalize to 1
 
-        # Calcul des métriques pour le portefeuille
+        # Calculate metrics for the portfolio
         portfolio_return, portfolio_volatility, sharpe_ratio = calculate_portfolio_metrics(
             weights, returns, cov_matrix, risk_free_rate
         )
 
-        # Stockage des résultats
+        # Store results
         results[i, :num_assets] = weights
         results[i, num_assets:] = portfolio_return, portfolio_volatility, sharpe_ratio
 
     return results
 
 
-def calculate_FE(returns, cov_matrix, risk_free_rate, portfolio_weights):
+def calculate_efficient_frontier(returns, cov_matrix, risk_free_rate, portfolio_weights):
     """
-    Effectue les calculs pour la frontière efficiente.
+    Performs calculations for the efficient frontier.
 
-    :param returns: Rendements moyens des actifs.
-    :param cov_matrix: Matrice de covariance des actifs.
-    :param risk_free_rate: Taux sans risque.
-    :param portfolio_weights: Pondérations du portefeuille actuel.
-    :return: Un tuple contenant le DataFrame des portefeuilles simulés,
-             le portefeuille à volatilité minimale et le portefeuille au Sharpe maximal.
+    :param returns: Average returns of assets.
+    :param cov_matrix: Covariance matrix of assets.
+    :param risk_free_rate: Risk-free rate.
+    :param portfolio_weights: Portfolio weights.
+    :return: A tuple containing the DataFrame of simulated portfolios,
+             the minimum volatility portfolio, and the maximum Sharpe portfolio.
     """
-    # Simuler les portefeuilles
+    # Simulate portfolios
     num_assets = len(returns)
     num_portfolios = 10000
-    results = np.zeros((num_portfolios, num_assets + 3))  # Colonnes : pondérations + métriques
+    results = np.zeros((num_portfolios, num_assets + 3))  # Columns: weights + metrics
 
     for i in range(num_portfolios):
         weights = np.random.random(num_assets)
-        weights /= weights.sum()  # Normalisation à 1
+        weights /= weights.sum()  # Normalize to 1
         portfolio_return, portfolio_volatility, sharpe_ratio = calculate_portfolio_metrics(
             weights, returns, cov_matrix, risk_free_rate
         )
         results[i, :num_assets] = weights
         results[i, num_assets:] = portfolio_return, portfolio_volatility, sharpe_ratio
 
-    # Convertir en DataFrame
+    # Convert to DataFrame
     columns = (
         [f'Weight {i+1}' for i in range(num_assets)]
-        + ['Rendement', 'Volatilité', 'Ratio de Sharpe']
+        + ['Return', 'Volatility', 'Sharpe Ratio']
     )
     portfolios = pd.DataFrame(results, columns=columns)
 
-    # Trouver les portefeuilles optimaux
-    min_volatility_idx = portfolios['Volatilité'].idxmin()
-    max_sharpe_idx = portfolios['Ratio de Sharpe'].idxmax()
+    # Find optimal portfolios
+    min_volatility_idx = portfolios['Volatility'].idxmin()
+    max_sharpe_idx = portfolios['Sharpe Ratio'].idxmax()
 
     min_volatility_portfolio = portfolios.iloc[min_volatility_idx]
     max_sharpe_portfolio = portfolios.iloc[max_sharpe_idx]
 
-    # Calculer les métriques du portefeuille actuel
+    # Calculate current portfolio metrics
     portfolio_return, portfolio_volatility, sharpe_ratio = calculate_portfolio_metrics(
         portfolio_weights, returns, cov_matrix, risk_free_rate
     )
     current_portfolio_metrics = {
-        "Rendement": portfolio_return * 100,
-        "Volatilité": portfolio_volatility * 100,
-        "Ratio de Sharpe": sharpe_ratio
+        "Return": portfolio_return * 100,
+        "Volatility": portfolio_volatility * 100,
+        "Sharpe Ratio": sharpe_ratio
     }
 
     return portfolios, min_volatility_portfolio, max_sharpe_portfolio, current_portfolio_metrics
 
 
-# FE améliorée à l'aide de ChatGPT
-def plot_FE(portfolios, min_volatility_portfolio, max_sharpe_portfolio, current_portfolio_metrics,
+# Efficient frontier improved with help from ChatGPT
+def plot_efficient_frontier(portfolios, min_volatility_portfolio, max_sharpe_portfolio, current_portfolio_metrics,
             individual_volatility, individual_returns, asset_names):
     """
-    Trace la frontière efficiente avec les portefeuilles simulés.
+    Plots the efficient frontier with simulated portfolios.
 
-    :param portfolios: DataFrame des portefeuilles simulés.
-    :param min_volatility_portfolio: Portefeuille à volatilité minimale.
-    :param max_sharpe_portfolio: Portefeuille avec le Sharpe maximal.
-    :param current_portfolio_metrics: Dictionnaire contenant les métriques du portefeuille actuel.
-    :param individual_volatility: Volatilité individuelle des actifs.
-    :param individual_returns: Rendements individuels des actifs.
-    :param asset_names: Liste des noms des actifs.
-    :return: Objet Plotly `Figure`.
+    :param portfolios: DataFrame of simulated portfolios.
+    :param min_volatility_portfolio: Minimum volatility portfolio.
+    :param max_sharpe_portfolio: Portfolio with maximum Sharpe ratio.
+    :param current_portfolio_metrics: Dictionary containing current portfolio metrics.
+    :param individual_volatility: Individual asset volatility.
+    :param individual_returns: Individual asset returns.
+    :param asset_names: List of asset names.
+    :return: Plotly Figure object.
     """
     fig = go.Figure()
 
-    # Tracer les portefeuilles simulés
+    # Plot simulated portfolios
     fig.add_trace(go.Scatter(
-        x=portfolios['Volatilité'] * 100,
-        y=portfolios['Rendement'] * 100,
+        x=portfolios['Volatility'] * 100,
+        y=portfolios['Return'] * 100,
         mode='markers',
         marker=dict(
             size=5,
-            color=portfolios['Ratio de Sharpe'],
+            color=portfolios['Sharpe Ratio'],
             colorscale='Viridis',
             showscale=True,
-            colorbar=dict(title='Ratio de Sharpe')
+            colorbar=dict(title='Sharpe Ratio')
         ),
-        text=portfolios['Ratio de Sharpe'],
-        name='Portefeuilles simulés'
+        text=portfolios['Sharpe Ratio'],
+        name='Simulated Portfolios'
     ))
 
-    # Ajouter le portefeuille actuel
+    # Add current portfolio
     fig.add_trace(go.Scatter(
-        x=[current_portfolio_metrics["Volatilité"]],
-        y=[current_portfolio_metrics["Rendement"]],
+        x=[current_portfolio_metrics["Volatility"]],
+        y=[current_portfolio_metrics["Return"]],
         mode='markers+text',
         marker=dict(color='black', size=12, symbol='hexagram'),
-        text=['Portefeuille Actuel'],
+        text=['Current Portfolio'],
         textposition="top center",
-        name='Portefeuille Actuel'
+        name='Current Portfolio'
     ))
 
-    # Ajouter les actifs individuels
+    # Add individual assets
     fig.add_trace(go.Scatter(
         x=individual_volatility * 100,
         y=individual_returns * 100,
@@ -226,36 +225,36 @@ def plot_FE(portfolios, min_volatility_portfolio, max_sharpe_portfolio, current_
         marker=dict(color='blue', size=8),
         text=asset_names,
         textposition="top center",
-        name='Actifs'
+        name='Assets'
     ))
 
-    # Ajouter le portefeuille à volatilité minimale
+    # Add minimum volatility portfolio
     fig.add_trace(go.Scatter(
-        x=[min_volatility_portfolio['Volatilité'] * 100],
-        y=[min_volatility_portfolio['Rendement'] * 100],
+        x=[min_volatility_portfolio['Volatility'] * 100],
+        y=[min_volatility_portfolio['Return'] * 100],
         mode='markers+text',
         marker=dict(color='magenta', size=12, symbol='star-diamond'),
         text=['Min Vol'],
         textposition="top center",
-        name='Portefeuille à Volatilité Minimale'
+        name='Minimum Volatility Portfolio'
     ))
 
-    # Ajouter le portefeuille avec Sharpe maximal
+    # Add maximum Sharpe portfolio
     fig.add_trace(go.Scatter(
-        x=[max_sharpe_portfolio['Volatilité'] * 100],
-        y=[max_sharpe_portfolio['Rendement'] * 100],
+        x=[max_sharpe_portfolio['Volatility'] * 100],
+        y=[max_sharpe_portfolio['Return'] * 100],
         mode='markers+text',
         marker=dict(color='red', size=12, symbol='star-diamond'),
         text=['Max Sharpe'],
         textposition="top center",
-        name='Portefeuille avec Sharpe Maximal'
+        name='Maximum Sharpe Portfolio'
     ))
 
-    # Mettre à jour la mise en page
+    # Update layout
     fig.update_layout(
-        title='Frontière efficiente avec portefeuilles et actifs',
-        xaxis_title='Volatilité (%)',
-        yaxis_title='Rendement attendu (%)',
+        title='Efficient frontier with portfolios and assets',
+        xaxis_title='Volatility (%)',
+        yaxis_title='Expected Return (%)',
         legend=dict(
             orientation="h",
             yanchor="top",
@@ -272,59 +271,59 @@ def plot_FE(portfolios, min_volatility_portfolio, max_sharpe_portfolio, current_
 
 def plot_portfolio_performance(tickers, weights, min_vol_weights, max_sharpe_weights, period='10y'):
     """
-    Trace la performance cumulée des portefeuilles sur une période donnée.
+    Plots the cumulative performance of portfolios over a given period.
 
-    :param tickers: Liste des tickers des actifs du portefeuille.
-    :param weights: Pondérations du portefeuille original.
-    :param min_vol_weights: Pondérations du portefeuille à volatilité minimale.
-    :param max_sharpe_weights: Pondérations du portefeuille avec Sharpe maximal.
-    :param period: Période pour les calculs (par défaut '10y').
-    :return: Objet Plotly `Figure`.
+    :param tickers: List of ticker symbols for portfolio assets.
+    :param weights: Weights of the original portfolio.
+    :param min_vol_weights: Weights of the minimum volatility portfolio.
+    :param max_sharpe_weights: Weights of the maximum Sharpe portfolio.
+    :param period: Period for calculations (default '10y').
+    :return: Plotly Figure object.
     """
-    # Calculer les performances cumulées
-    # Portefeuille original
-    original_cumulative, _ = calculate_PP(tickers, weights, period=period)
+    # Calculate cumulative performance
+    # Original portfolio
+    original_cumulative, _ = calculate_portfolio_performance(tickers, weights, period=period)
 
-    # Portefeuille à volatilité minimale
-    min_vol_cumulative, _ = calculate_PP(tickers, min_vol_weights, period=period)
+    # Minimum volatility portfolio
+    min_vol_cumulative, _ = calculate_portfolio_performance(tickers, min_vol_weights, period=period)
 
-    # Portefeuille avec Sharpe maximal
-    max_sharpe_cumulative, _ = calculate_PP(tickers, max_sharpe_weights, period=period)
+    # Maximum Sharpe portfolio
+    max_sharpe_cumulative, _ = calculate_portfolio_performance(tickers, max_sharpe_weights, period=period)
 
-    # Tracer les performances cumulées
+    # Plot cumulative performance
     fig = go.Figure()
 
-    # Performance du portefeuille original
+    # Original portfolio performance
     fig.add_trace(go.Scatter(
         x=original_cumulative.index,
         y=original_cumulative.values,
-        mode='lines',  # Lignes sans marqueurs
-        name='Portefeuille Original',
+        mode='lines',  # Lines without markers
+        name='Original Portfolio',
         line=dict(color='#0611ab', width=3)
     ))
 
-    # Performance du portefeuille à volatilité minimale
+    # Minimum volatility portfolio performance
     fig.add_trace(go.Scatter(
         x=min_vol_cumulative.index,
         y=min_vol_cumulative.values,
-        mode='lines',  # Lignes sans marqueurs
-        name='Portefeuille Volatilité Minimale',
+        mode='lines',  # Lines without markers
+        name='Minimum Volatility Portfolio',
         line=dict(color='green', width=3)
     ))
 
-    # Performance du portefeuille avec Sharpe maximal
+    # Maximum Sharpe portfolio performance
     fig.add_trace(go.Scatter(
         x=max_sharpe_cumulative.index,
         y=max_sharpe_cumulative.values,
-        mode='lines',  # Lignes sans marqueurs
-        name='Portefeuille Sharpe Maximal',
+        mode='lines',  # Lines without markers
+        name='Maximum Sharpe Portfolio',
         line=dict(color='gold', width=3)
     ))
 
-    # Mettre à jour la mise en page du graphique
+    # Update chart layout
     fig.update_layout(
         xaxis_title='Date',
-        yaxis_title='Valeur Cumulative',
+        yaxis_title='Cumulative Value',
         template='plotly_white',
         height=550,
         margin=dict(l=50, r=50, t=30, b=50),

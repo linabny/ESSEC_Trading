@@ -15,18 +15,18 @@ def get_company_name(ticker):
         company = 'N/A'
     return company
 
-# Fonction pour calculer la performance historique du portefeuille
+# Function to calculate historical portfolio performance
 def calculate_portfolio_performance(tickers, weights, period='1y'):
     data = yf.download(tickers, period=period)['Close']
     if isinstance(data, pd.Series):  
-        data = data.to_frame()  # CAS OU IL Y A UN SEUL TICKER 
+        data = data.to_frame()  # CASE WHERE THERE IS ONLY ONE TICKER 
     returns = data.pct_change().dropna()
     weighted_returns = returns.multiply(weights, axis=1)
     portfolio_returns = weighted_returns.sum(axis=1)
     portfolio_cumulative = (1 + portfolio_returns).cumprod()
     return portfolio_cumulative, portfolio_returns
 
-# Initialisation des listes dans session_state
+# Initialize lists in session_state
 if 'tickers' not in st.session_state:
     st.session_state.tickers = ['']
 if 'weights' not in st.session_state:
@@ -34,14 +34,14 @@ if 'weights' not in st.session_state:
 if 'watchlist' not in st.session_state:
     st.session_state.watchlist = []
 if 'current_index' not in st.session_state:
-    st.session_state.current_index = 0  # Initialiser current_index pour la page d'accueil
+    st.session_state.current_index = 0  # Initialize current_index for the home page
 
-# Fonction pour ajouter un actif
+# Function to add an asset
 def add_asset():
     st.session_state.tickers.append('')
     st.session_state.weights.append(0.0)
 
-# Fonction pour supprimer un actif
+# Function to remove an asset
 def remove_asset(index):
     del st.session_state.tickers[index]
     del st.session_state.weights[index]
@@ -61,7 +61,7 @@ df_companies = pd.read_csv("Data/data_pisquared.csv")
 
 def main():
     
-    #CSS pour ajuster la largeur de la zone de contenu
+    #CSS to adjust content area width
     st.markdown(
         """
         <style>
@@ -77,7 +77,7 @@ def main():
 
     st.title("Portfolio visualizer")
 
-    description = "Portfolio Visualizer permet aux utilisateurs de créer et personnaliser leur propre portefeuille d’investissement. Le choix des entreprises peut se faire en triant par indices de référence, en recherchant directement le nom dans la barre de recherche, ou encore en sélectionnant parmi celles déjà ajoutées à leur watch-list. L’utilisateur doit attribuer à chaque entreprise un poids spécifique, correspondant au pourcentage de cette dernière dans le portefeuille. π²Trading génère ensuite un tableau récapitulatif avec les principales statistiques du portefeuille, la performance historique YTD, ainsi qu’un graphique illustrant la répartition des poids entre les différentes entreprises. Le portefeuille est automatiquement sauvegardé pour une utilisation ultérieure dans l’onglet Portfolio Optimizer."
+    description = "Portfolio Visualizer allows users to create and customize their own investment portfolio. The choice of companies can be made by filtering by benchmark indices, searching directly for the name in the search bar, or selecting from those already added to their watch-list. The user must assign a specific weight to each company, corresponding to its percentage in the portfolio. π²Trading then generates a summary table with the main portfolio statistics, historical YTD performance, as well as a chart illustrating the distribution of weights between different companies. The portfolio is automatically saved for later use in the Portfolio Optimizer tab."
 
     justified_description = f"""
     <div style='text-align: justify; text-justify: inter-word;'>
@@ -88,16 +88,16 @@ def main():
 
     st.write("")
 
-    st.write("Veuillez entrer les actifs que vous souhaitez inclure dans votre portefeuille ainsi que les poids associés.")
+    st.write("Please enter the assets you want to include in your portfolio and their associated weights.")
 
     if 'portfolio' not in st.session_state:
-        st.session_state.portfolio = pd.DataFrame(columns=['Actions', 'Nom de l\'Entreprise', 'Poids (%)'])
+        st.session_state.portfolio = pd.DataFrame(columns=['Ticker', 'Company Name', 'Weight (%)'])
 
-    #Filtre d'indice dans la page principale
-    st.header("Filtrer par Indice")
+    #Index filter on the main page
+    st.header("Filter by Index")
     indices = df_companies['Ind'].unique().tolist()
     selected_indices = st.multiselect(
-        "Choisissez un ou plusieurs indices",
+        "Choose one or more indices",
         options=indices,
         default=indices 
     )
@@ -108,28 +108,28 @@ def main():
         filtered_companies = df_companies.copy()
 
     if filtered_companies.empty:
-        st.warning("Aucune entreprise trouvée pour les indices sélectionnés.")
+        st.warning("No companies found for the selected indices.")
     
-    #Fonction callback pour définir l'index à supprimer
+    #Callback function to define the index to delete
     def remove_asset_callback(index):
         if 0 <= index < len(st.session_state.tickers):
             remove_asset(index)
 
-    #Fonction pour ajouter un actif
+    #Function to add an asset
     def add_asset_callback():
         add_asset()
 
-    #Bouton pour ajouter un actif
-    st.button("➕ Ajouter un actif", on_click=add_asset_callback)
+    #Button to add an asset
+    st.button("➕ Add an asset", on_click=add_asset_callback)
 
     for i in range(len(st.session_state.tickers)):
         ticker = st.session_state.tickers[i]
         matching_rows = filtered_companies[filtered_companies["Ticker"] == ticker]
         
-        #Débugage de l'option watchlist
-        #On calcule l'index par défaut du selectbox.
-        #S'il y a un match, on se place sur l'entreprise qui correspond
-        #Sinon, on se placera sur la première option (""), mais on ne vide pas le ticker.
+        #Debug watchlist option
+        #We calculate the default index of the selectbox.
+        #If there is a match, we position on the matching company
+        #Otherwise, we'll position on the first option (""), but we don't empty the ticker.
         default_index = 0
         companies_list = [""] + filtered_companies["Company"].tolist()
         if not matching_rows.empty:
@@ -141,7 +141,7 @@ def main():
 
         with cols[0]:
             selected_company = st.selectbox(
-                f"Entreprise {i+1}",
+                f"Company {i+1}",
                 options=companies_list,
                 index=default_index,
                 key=f"company_{i}"
@@ -154,7 +154,7 @@ def main():
 
         with cols[1]:
             weight = st.number_input(
-                f"Poids {i+1} (%)",
+                f"Weight {i+1} (%)",
                 key=f"weight_{i}",
                 min_value=0.0,
                 max_value=100.0,
@@ -164,35 +164,35 @@ def main():
             st.session_state.weights[i] = weight
 
         with cols[2]:
-            st.button("🗑️ Supprimer", key=f"remove_{i}", on_click=remove_asset_callback, args=(i,))
+            st.button("🗑️ Delete", key=f"remove_{i}", on_click=remove_asset_callback, args=(i,))
 
-    st.write("### Ajouter des actions depuis votre Watchlist")
+    st.write("### Add stocks from your Watchlist")
     if st.session_state.watchlist:
-        watchlist_selection = st.selectbox("Sélectionnez une action de votre watchlist :", st.session_state.watchlist, key="watchlist_select")
+        watchlist_selection = st.selectbox("Select a stock from your watchlist:", st.session_state.watchlist, key="watchlist_select")
 
         def add_from_watchlist():
             selected_ticker = watchlist_selection.upper()
             if selected_ticker in st.session_state.tickers:
-                st.warning(f"L'action **{selected_ticker}** est déjà dans votre portefeuille.")
+                st.warning(f"The stock **{selected_ticker}** is already in your portfolio.")
             else:
                 st.session_state.tickers.append(selected_ticker)
                 st.session_state.weights.append(0.0)
-                st.success(f"L'action **{selected_ticker}** a été ajoutée à votre portefeuille. Veuillez définir son poids.")
+                st.success(f"The stock **{selected_ticker}** has been added to your portfolio. Please set its weight.")
 
-        st.button("➕ Ajouter depuis la Watchlist", on_click=add_from_watchlist)
+        st.button("➕ Add from Watchlist", on_click=add_from_watchlist)
     else:
-        st.info("Votre watchlist est vide. Allez dans la section **Stock picking** pour ajouter des actions à votre watchlist.")
+        st.info("Your watchlist is empty. Go to the **Stock Picking** section to add stocks to your watchlist.")
 
-    #Affichage en temps réel de la somme des poids
+    #Real-time display of the sum of weights
     total_weight = sum(st.session_state.weights)
-    st.markdown(f"**Poids Total Actuel : {total_weight:.2f}%**")
+    st.markdown(f"**Current Total Weight: {total_weight:.2f}%**")
     if not np.isclose(total_weight, 100.0):
-        st.warning("⚠️ La somme des poids doit être égale à 100%.")
+        st.warning("⚠️ The sum of weights must equal 100%.")
     else:
-        st.success("✅ La somme des poids est égale à 100%.")
+        st.success("✅ The sum of weights equals 100%.")
 
-    #Bouton validation portefeuille
-    if st.button("✅ Valider le Portefeuille"):
+    #Portfolio validation button
+    if st.button("✅ Validate Portfolio"):
         tickers = []
         weights = []
         for i in range(len(st.session_state.tickers)):
@@ -207,39 +207,39 @@ def main():
 
         duplicates = set([ticker for ticker in tickers if tickers.count(ticker) > 1])
         if duplicates:
-            st.error(f"Les tickers suivants sont présents plusieurs fois dans votre portefeuille : {', '.join(duplicates)}. Veuillez modifier leurs poids ou changer de ticker.")
+            st.error(f"The following tickers appear multiple times in your portfolio: {', '.join(duplicates)}. Please modify their weights or change the ticker.")
             st.stop()
 
-        #Dataframe du portefeuille
+        #Portfolio dataframe
         df = pd.DataFrame({
             'Ticker': tickers,
-            'Poids (%)': weights
+            'Weight (%)': weights
         })
 
-        total_weight = df['Poids (%)'].sum()
+        total_weight = df['Weight (%)'].sum()
         if total_weight == 0:
-            st.error("La somme des poids est égale à 0%. Veuillez entrer des poids valides.")
+            st.error("The sum of weights is 0%. Please enter valid weights.")
             st.stop()
 
         try:
-            df['Poids (%)'] = df['Poids (%)'].astype(float)
+            df['Weight (%)'] = df['Weight (%)'].astype(float)
         except ValueError:
-            st.error("Veuillez entrer des valeurs numériques valides pour les poids.")
+            st.error("Please enter valid numerical values for the weights.")
             st.stop()
 
-        #Vérification poids positifs
-        if (df['Poids (%)'] <= 0).any():
-            st.error("Tous les poids doivent être strictement positifs.")
+        #Verify positive weights
+        if (df['Weight (%)'] <= 0).any():
+            st.error("All weights must be strictly positive.")
             st.stop()
         else:
-            #Vérification somme à 100%
+            #Verify sum to 100%
             if not np.isclose(total_weight, 100.0):
-                st.warning(f"⚠️ La somme des poids est de {total_weight:.2f}%. Elle doit être égale à 100%.")
-                normalize = st.checkbox("Voulez-vous normaliser les poids automatiquement ?", key="normalize_validation")
+                st.warning(f"⚠️ The sum of weights is {total_weight:.2f}%. It must equal 100%.")
+                normalize = st.checkbox("Do you want to normalize the weights automatically?", key="normalize_validation")
                 if normalize:
-                    df['Poids (%)'] = df['Poids (%)'] * 100 / total_weight
-                    total_weight = df['Poids (%)'].sum()
-                    st.success("Les poids ont été normalisés.")
+                    df['Weight (%)'] = df['Weight (%)'] * 100 / total_weight
+                    total_weight = df['Weight (%)'].sum()
+                    st.success("The weights have been normalized.")
             #else:
                 #st.success("✅ La somme des poids est égale à 100%.")
 
@@ -258,48 +258,48 @@ def main():
                         invalid_tickers.append(ticker)
                 except Exception as e:
                     invalid_tickers.append(ticker)
-                    st.error(f"Erreur lors de la vérification du ticker {ticker}: {e}")
+                    st.error(f"Error verifying ticker {ticker}: {e}")
 
         if invalid_tickers:
-            st.error(f"Les tickers suivants ne sont pas valides ou les données ne sont pas disponibles : {', '.join(invalid_tickers)}")
+            st.error(f"The following tickers are not valid or data is not available: {', '.join(invalid_tickers)}")
             st.stop()
         elif not valid_tickers:
-            st.error("Aucun ticker valide n'a été fourni.")
+            st.error("No valid ticker was provided.")
             st.stop()
         else:
             portfolio = {
-                'Actions': valid_tickers,
-                'Nom de l\'Entreprise': company_names,
-                'Poids (%)': [df.loc[df['Ticker'] == ticker, 'Poids (%)'].values[0] for ticker in valid_tickers]
+                'Ticker': valid_tickers,
+                'Company Name': company_names,
+                'Weight (%)': [df.loc[df['Ticker'] == ticker, 'Weight (%)'].values[0] for ticker in valid_tickers]
             }
             portfolio_df = pd.DataFrame(portfolio)
             for i in range(len(portfolio_df)):
-                portfolio_df.loc[i, 'Industrie'] = yf.Ticker(portfolio_df.loc[i, 'Actions']).info.get('industry', 'N/A')
-            grouped_by_industry = portfolio_df.groupby('Industrie')['Poids (%)'].apply(np.sum).reset_index()
+                portfolio_df.loc[i, 'Industry'] = yf.Ticker(portfolio_df.loc[i, 'Ticker']).info.get('industry', 'N/A')
+            grouped_by_industry = portfolio_df.groupby('Industry')['Weight (%)'].apply(np.sum).reset_index()
 
-            #Métriques du portefeuilles
-            total_weight = portfolio_df['Poids (%)'].sum()
-            average_weight = portfolio_df['Poids (%)'].mean()
-            max_weight = portfolio_df['Poids (%)'].max()
-            min_weight = portfolio_df['Poids (%)'].min()
+            #Portfolio metrics
+            total_weight = portfolio_df['Weight (%)'].sum()
+            average_weight = portfolio_df['Weight (%)'].mean()
+            max_weight = portfolio_df['Weight (%)'].max()
+            min_weight = portfolio_df['Weight (%)'].min()
 
-            #Rendement attendu annualisée
+            #Expected annualized return
             portfolio_cumulative, portfolio_returns = calculate_portfolio_performance(
                 valid_tickers,
-                np.array(portfolio_df['Poids (%)'].tolist()) / 100,
+                np.array(portfolio_df['Weight (%)'].tolist()) / 100,
                 period='1y'
             )
-            expected_return = portfolio_returns.mean() * 252  # 252 jours de bourse par an
+            expected_return = portfolio_returns.mean() * 252  # 252 trading days per year
 
-            #Volatilité annualisée
+            #Annualized volatility
             volatility = portfolio_returns.std() * np.sqrt(252)
 
-            #Ratio de Sharpe (avec un taux sans risque de 2%)
+            #Sharpe Ratio (with a risk-free rate of 2%)
             risk_free_rate = 0.02
             sharpe_ratio = (expected_return - risk_free_rate) / volatility if volatility != 0 else np.nan
 
-            st.write("### Votre portefeuille :")
-            st.write("#### Tableau Récapitulatif")
+            st.write("### Your portfolio:")
+            st.write("#### Summary Table")
 
             fig_table = go.Figure(data=[go.Table(
                 header=dict(
@@ -324,20 +324,20 @@ def main():
             )
             st.plotly_chart(fig_table, use_container_width=True, key="visualizer_portfolio_table")
 
-            #Statistiques du portefeuille
-            st.write("### Statistiques du Portefeuille")
+            #Portfolio Statistics
+            st.write("### Portfolio Statistics")
             metrics_labels = [
-                "Poids Total", "Poids Moyen", "Poids Maximum", "Poids Minimum",
-                "Rendement Attendu", "Volatilité", "Ratio de Sharpe"
+                "Total Weight", "Average Weight", "Maximum Weight", "Minimum Weight",
+                "Expected Return", "Volatility", "Sharpe Ratio"
             ]
             metrics_values = [
                 f"{total_weight:.2f}%", f"{average_weight:.2f}%", f"{max_weight:.2f}%", f"{min_weight:.2f}%",
                 f"{expected_return*100:.2f}%", f"{volatility*100:.2f}%", f"{sharpe_ratio:.2f}"
             ]
             metrics_descriptions = [
-                "La somme des poids doit être de 100%.", "", "", "",
-                "Rendement attendu annualisé.", "Volatilité annualisée du portefeuille.",
-                "Ratio de Sharpe (rendement ajusté au risque)."
+                "The sum of weights must be 100%.", "", "", "",
+                "Expected annualized return.", "Annualized portfolio volatility.",
+                "Sharpe Ratio (risk-adjusted return)."
             ]
 
             num_metrics = len(metrics_labels)
@@ -352,21 +352,21 @@ def main():
             graph_cols = st.columns(2)
 
             with graph_cols[0]:
-                st.write("### Répartition du portefeuille par industrie")
-                grouped_sorted = grouped_by_industry.sort_values(by='Poids (%)', ascending=False)
-                plot_pie(grouped_sorted, 'Industrie')  #Module des fonctions graphiques
+                st.write("### Portfolio distribution by industry")
+                grouped_sorted = grouped_by_industry.sort_values(by='Weight (%)', ascending=False)
+                plot_pie(grouped_sorted, 'Industry')  #Graphics functions module
 
             with graph_cols[1]:
-                    st.write("### Répartition des poids dans le portefeuille")
-                    portfolio_df_sorted = portfolio_df.sort_values(by='Poids (%)', ascending=False)
-                    plot_pie(portfolio_df_sorted, 'Actions')  #Module des fonctions graphiques
+                    st.write("### Weight distribution in the portfolio")
+                    portfolio_df_sorted = portfolio_df.sort_values(by='Weight (%)', ascending=False)
+                    plot_pie(portfolio_df_sorted, 'Ticker')  #Graphics functions module
 
-            st.write("### Performance historique du portefeuille")
+            st.write("### Historical portfolio performance")
             plot_performance(portfolio_cumulative)
 
-            #On stocke le portefeuille pour la partie opti
+            #We store the portfolio for the optimization section
             st.session_state['portfolio'] = portfolio_df
-            st.success("✅ Le portefeuille a été enregistré pour une utilisation ultérieure.")
+            st.success("✅ The portfolio has been saved for later use.")
 
 if __name__ == "__main__":
     main()
