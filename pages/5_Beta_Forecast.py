@@ -47,7 +47,7 @@ def main():
 
     st.write("")
 
-    df = pd.read_csv("Data/data_pisquared.csv")
+    df = pd.read_csv("Data/data_trading.csv")
 
     #company = st.selectbox("Select a company:", df['Company'])
     # Filter by Index

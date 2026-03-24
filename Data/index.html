@@ -3,14 +3,6 @@
 <head>
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    
-        <script>
-            L_NO_TOUCH = false;
-            L_DISABLE_3D = false;
-        </script>
-    
-    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
-    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -25,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_0f66a5e09e8198d8c6476d8ad161d6e9 {
+                #map_03205e3e7a7b3054bace46c95792cd4d {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -34,19 +26,42 @@
                 }
                 .leaflet-container { font-size: 1rem; }
             </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
         
 </head>
 <body>
     
     
-            <div class="folium-map" id="map_0f66a5e09e8198d8c6476d8ad161d6e9" ></div>
+            <div class="folium-map" id="map_03205e3e7a7b3054bace46c95792cd4d" ></div>
         
 </body>
 <script>
     
     
-            var map_0f66a5e09e8198d8c6476d8ad161d6e9 = L.map(
-                "map_0f66a5e09e8198d8c6476d8ad161d6e9",
+            var map_03205e3e7a7b3054bace46c95792cd4d = L.map(
+                "map_03205e3e7a7b3054bace46c95792cd4d",
                 {
                     center: [48.8566, 2.3522],
                     crs: L.CRS.EPSG3857,
@@ -63,7 +78,7 @@
 
         
     
-            var tile_layer_cc0efd5f5ac523cca0931658eba701f4 = L.tileLayer(
+            var tile_layer_fd746c388304d2c0d6531ef253abfe7e = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -80,142 +95,142 @@
             );
         
     
-            tile_layer_cc0efd5f5ac523cca0931658eba701f4.addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            tile_layer_fd746c388304d2c0d6531ef253abfe7e.addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-            var circle_marker_75a35358b88e121f1332eb1b99df718e = L.circleMarker(
+            var circle_marker_50d035242efa3d9fc9b631ef2e68ae8c = L.circleMarker(
                 [38.9072, -77.0369],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            ).addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-        var popup_68a979d6f5bf423878aafb2c614e13e5 = L.popup({
+        var popup_579771ba38d9f39d448f211b50e7043b = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_6fdef67807ded4d8d7604614e554715d = $(`<div id="html_6fdef67807ded4d8d7604614e554715d" style="width: 100.0%; height: 100.0%;">United States: 503 entreprises</div>`)[0];
-                popup_68a979d6f5bf423878aafb2c614e13e5.setContent(html_6fdef67807ded4d8d7604614e554715d);
+                var html_625e7a4c814c494484983d05a707ee76 = $(`<div id="html_625e7a4c814c494484983d05a707ee76" style="width: 100.0%; height: 100.0%;">United States: 503 companies</div>`)[0];
+                popup_579771ba38d9f39d448f211b50e7043b.setContent(html_625e7a4c814c494484983d05a707ee76);
             
         
 
-        circle_marker_75a35358b88e121f1332eb1b99df718e.bindPopup(popup_68a979d6f5bf423878aafb2c614e13e5)
+        circle_marker_50d035242efa3d9fc9b631ef2e68ae8c.bindPopup(popup_579771ba38d9f39d448f211b50e7043b)
         ;
 
         
     
     
-            var circle_marker_3888394e93133fb812977b30b904dd05 = L.circleMarker(
+            var circle_marker_7f591a81a107d05a29d4ad267d18f871 = L.circleMarker(
                 [51.5074, -0.1278],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            ).addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-        var popup_59da8026a159fdf0371a3d3d0310ebbd = L.popup({
+        var popup_64a18f2b1a02390b44cb394a40faf3ab = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_f5a476267a17362a31b134b38026c76b = $(`<div id="html_f5a476267a17362a31b134b38026c76b" style="width: 100.0%; height: 100.0%;">United Kingdom: 100 entreprises</div>`)[0];
-                popup_59da8026a159fdf0371a3d3d0310ebbd.setContent(html_f5a476267a17362a31b134b38026c76b);
+                var html_ea45c8daa885ee867a08ac8725de24d1 = $(`<div id="html_ea45c8daa885ee867a08ac8725de24d1" style="width: 100.0%; height: 100.0%;">United Kingdom: 100 companies</div>`)[0];
+                popup_64a18f2b1a02390b44cb394a40faf3ab.setContent(html_ea45c8daa885ee867a08ac8725de24d1);
             
         
 
-        circle_marker_3888394e93133fb812977b30b904dd05.bindPopup(popup_59da8026a159fdf0371a3d3d0310ebbd)
+        circle_marker_7f591a81a107d05a29d4ad267d18f871.bindPopup(popup_64a18f2b1a02390b44cb394a40faf3ab)
         ;
 
         
     
     
-            var circle_marker_ebca851471927cc4fa22641b74ded2b3 = L.circleMarker(
+            var circle_marker_891d097f2479182bf0627d777665a054 = L.circleMarker(
                 [48.8566, 2.3522],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            ).addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-        var popup_0ff8817b554daf5f612f93f87b5f9e5e = L.popup({
+        var popup_a6f6df44feb39703d1e3d16135e1f2a1 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_55fb29d274f1e37f2ce7a9ef629635b7 = $(`<div id="html_55fb29d274f1e37f2ce7a9ef629635b7" style="width: 100.0%; height: 100.0%;">France: 40 entreprises</div>`)[0];
-                popup_0ff8817b554daf5f612f93f87b5f9e5e.setContent(html_55fb29d274f1e37f2ce7a9ef629635b7);
+                var html_f21ffb3cc7a21b1eb9fd98fcc38276eb = $(`<div id="html_f21ffb3cc7a21b1eb9fd98fcc38276eb" style="width: 100.0%; height: 100.0%;">France: 40 companies</div>`)[0];
+                popup_a6f6df44feb39703d1e3d16135e1f2a1.setContent(html_f21ffb3cc7a21b1eb9fd98fcc38276eb);
             
         
 
-        circle_marker_ebca851471927cc4fa22641b74ded2b3.bindPopup(popup_0ff8817b554daf5f612f93f87b5f9e5e)
+        circle_marker_891d097f2479182bf0627d777665a054.bindPopup(popup_a6f6df44feb39703d1e3d16135e1f2a1)
         ;
 
         
     
     
-            var circle_marker_da51027e2e4815bc2e0f26378317581c = L.circleMarker(
+            var circle_marker_1d78ce850d64a35a12deade80585eb1a = L.circleMarker(
                 [52.52, 13.405],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            ).addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-        var popup_1107cb8224e1ccfbd80102010412dad1 = L.popup({
+        var popup_0c5fc283f965c67d078442da719f7b14 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_1676ddb4b41acd3f202f57b8af170fd6 = $(`<div id="html_1676ddb4b41acd3f202f57b8af170fd6" style="width: 100.0%; height: 100.0%;">Germany: 40 entreprises</div>`)[0];
-                popup_1107cb8224e1ccfbd80102010412dad1.setContent(html_1676ddb4b41acd3f202f57b8af170fd6);
+                var html_073414a5d6cc7e1ffd3c480b9bae3659 = $(`<div id="html_073414a5d6cc7e1ffd3c480b9bae3659" style="width: 100.0%; height: 100.0%;">Germany: 40 companies</div>`)[0];
+                popup_0c5fc283f965c67d078442da719f7b14.setContent(html_073414a5d6cc7e1ffd3c480b9bae3659);
             
         
 
-        circle_marker_da51027e2e4815bc2e0f26378317581c.bindPopup(popup_1107cb8224e1ccfbd80102010412dad1)
+        circle_marker_1d78ce850d64a35a12deade80585eb1a.bindPopup(popup_0c5fc283f965c67d078442da719f7b14)
         ;
 
         
     
     
-            var circle_marker_24e5264c16b905b766db64deebd7b87b = L.circleMarker(
+            var circle_marker_8af32a2aa1d809f4e57b06c3ea367190 = L.circleMarker(
                 [41.9028, 12.4964],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            ).addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-        var popup_cbf09c2b14976451e5a6bfac2c34f6d5 = L.popup({
+        var popup_ff842f51788e97b143c532f0ca950b84 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_f13406f39fcb7056bd95dad44ec5514d = $(`<div id="html_f13406f39fcb7056bd95dad44ec5514d" style="width: 100.0%; height: 100.0%;">Italy: 40 entreprises</div>`)[0];
-                popup_cbf09c2b14976451e5a6bfac2c34f6d5.setContent(html_f13406f39fcb7056bd95dad44ec5514d);
+                var html_097b6249681aae41790113f9e61c9ce1 = $(`<div id="html_097b6249681aae41790113f9e61c9ce1" style="width: 100.0%; height: 100.0%;">Italy: 40 companies</div>`)[0];
+                popup_ff842f51788e97b143c532f0ca950b84.setContent(html_097b6249681aae41790113f9e61c9ce1);
             
         
 
-        circle_marker_24e5264c16b905b766db64deebd7b87b.bindPopup(popup_cbf09c2b14976451e5a6bfac2c34f6d5)
+        circle_marker_8af32a2aa1d809f4e57b06c3ea367190.bindPopup(popup_ff842f51788e97b143c532f0ca950b84)
         ;
 
         
     
     
-            var circle_marker_f04bac2797bd6bf9cc9405cfda15952b = L.circleMarker(
+            var circle_marker_72b2b6e8feb2004b9aa3e91c08ad7556 = L.circleMarker(
                 [40.4168, -3.7038],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_0f66a5e09e8198d8c6476d8ad161d6e9);
+            ).addTo(map_03205e3e7a7b3054bace46c95792cd4d);
         
     
-        var popup_0e99a56c1ec84d74063c440cb42e5e06 = L.popup({
+        var popup_f628ab9ac039d61e9c68e5fff6cecd64 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_042664999cbe71ad9d45556483f15766 = $(`<div id="html_042664999cbe71ad9d45556483f15766" style="width: 100.0%; height: 100.0%;">Spain: 35 entreprises</div>`)[0];
-                popup_0e99a56c1ec84d74063c440cb42e5e06.setContent(html_042664999cbe71ad9d45556483f15766);
+                var html_e09e3536c6bfb97af716b415b5bd8b4d = $(`<div id="html_e09e3536c6bfb97af716b415b5bd8b4d" style="width: 100.0%; height: 100.0%;">Spain: 35 companies</div>`)[0];
+                popup_f628ab9ac039d61e9c68e5fff6cecd64.setContent(html_e09e3536c6bfb97af716b415b5bd8b4d);
             
         
 
-        circle_marker_f04bac2797bd6bf9cc9405cfda15952b.bindPopup(popup_0e99a56c1ec84d74063c440cb42e5e06)
+        circle_marker_72b2b6e8feb2004b9aa3e91c08ad7556.bindPopup(popup_f628ab9ac039d61e9c68e5fff6cecd64)
         ;
 
         

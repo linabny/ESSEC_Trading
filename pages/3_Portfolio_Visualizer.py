@@ -57,7 +57,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-df_companies = pd.read_csv("Data/data_pisquared.csv")
+df_companies = pd.read_csv("Data/data_trading.csv")
 
 def main():
     

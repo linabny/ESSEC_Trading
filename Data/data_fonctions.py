@@ -20,7 +20,7 @@ def get_company_list(url, index_name):
         'S&P 500': 0,     # 1st table for S&P 500
         'DAX': 4,         # 5th table for DAX
         'FTSE MIB': 1,    # 2nd table for FTSE MIB
-        'FTSE 100': 4,    # 4th table for FTSE 100
+        'FTSE 100': 6,    # 7th table for FTSE 100
         'IBEX 35': 2      # 2nd table for IBEX 35
     }
 
@@ -134,7 +134,7 @@ def clean_ftse100(df_ftse100):
     - DataFrame containing the cleaned stock index data.
     """
     df_ftse100 = df_ftse100.drop(columns=[
-        'FTSE industry classification benchmark sector[24]'
+        'FTSE industry classification benchmark sector[38]'
         ])
     df_ftse100['Ticker'] = df_ftse100['Ticker'] + '.L'
     cols = df_ftse100.columns.tolist()
