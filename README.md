@@ -4,8 +4,6 @@
 
 **ESSEC Trading** is a comprehensive investment and portfolio management platform built with Streamlit. It combines cutting-edge financial tools with an intuitive, user-friendly interface to help both novice and expert investors maximize their potential. The platform leverages reliable data from Yahoo Finance and integrates modern financial theories with advanced simulations to transform your financial strategies into success.
 
-A new way of investing.
-
 ---
 
 ## Installation
