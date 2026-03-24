@@ -1,5 +1,6 @@
 import pandas as pd
 import folium
+import urllib.request
 
 
 def get_company_list(url, index_name):
@@ -25,7 +26,11 @@ def get_company_list(url, index_name):
 
     if index_name in index_table_map:
         try:
-            df = pd.read_html(url)[index_table_map[index_name]]
+            # Add User-Agent header to avoid HTTP 403 Forbidden from Wikipedia
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req) as response:
+                df = pd.read_html(response)[index_table_map[index_name]]
             return df
         except Exception as e:
             raise Exception(f"An error occurred while retrieving data from {url}: {e}")
@@ -196,10 +201,10 @@ def map_index(df):
     country_counts = df['Country'].value_counts().reset_index()
     country_counts.columns = ['Country', 'Count']
 
-    # Create a map (GPT)
+    # Create a map
     map = folium.Map(location=[48.8566, 2.3522], zoom_start=3)
 
-    # Add data by country (GPT)
+    # Add data by country 
     for _, row in country_counts.iterrows():
         country = row['Country']
         count = row['Count']
