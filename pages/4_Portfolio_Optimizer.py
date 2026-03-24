@@ -125,7 +125,7 @@ def main():
                     "Expected Return", "Volatility", "Sharpe Ratio"
                 ]
                 metrics_val = [
-                    f"{total_weight:.2f}%", f"{avg_weight:.2f}%", f"{max_weight:.2f}%",
+                    f"{total_weight:.0f}%", f"{avg_weight:.2f}%", f"{max_weight:.2f}%",
                     f"{min_weight:.2f}%", f"{expected_return*100:.2f}%",
                     f"{volatility*100:.2f}%", f"{sharpe_ratio:.2f}"
                 ]
