@@ -1,11 +1,2 @@
 [theme]
-backgroundColor = "#0e1117"
-secondaryBackgroundColor = "#262730"
-tertiaryBackgroundColor = "#262730"
-textColor = "#e6e6e6"
-font = "sans serif"
-primaryColor = "#0611ab"
-
-[client]
-showErrorDetails = true
-showRunningIndicator = true
+backgroundColor = "#FFFFFF"

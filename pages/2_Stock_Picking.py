@@ -161,7 +161,7 @@ def main():
                     width=800,   
                     height=700,
                     xaxis_rangeslider_visible=True,
-                    template='plotly_dark',
+                    template='plotly_white',
                     bargap=0
                 )
 

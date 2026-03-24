@@ -324,7 +324,7 @@ def plot_portfolio_performance(tickers, weights, min_vol_weights, max_sharpe_wei
     fig.update_layout(
         xaxis_title='Date',
         yaxis_title='Cumulative Value',
-        template='plotly_dark',
+        template='plotly_white',
         height=550,
         margin=dict(l=50, r=50, t=30, b=50),
         hovermode='x unified',
