@@ -35,6 +35,7 @@ AME,Ametek,S&P 500
 AMGN,Amgen,S&P 500
 APH,Amphenol,S&P 500
 ADI,Analog Devices,S&P 500
+ANSS,Ansys,S&P 500
 AON,Aon,S&P 500
 APA,APA Corporation,S&P 500
 AAPL,Apple Inc.,S&P 500
@@ -137,6 +138,7 @@ CVS,CVS Health,S&P 500
 DHR,Danaher Corporation,S&P 500
 DRI,Darden Restaurants,S&P 500
 DVA,DaVita,S&P 500
+DAY,Dayforce,S&P 500
 DECK,Deckers Brands,S&P 500
 DE,Deere & Company,S&P 500
 DELL,Dell Technologies,S&P 500
@@ -145,6 +147,7 @@ DVN,Devon Energy,S&P 500
 DXCM,Dexcom,S&P 500
 FANG,Diamondback Energy,S&P 500
 DLR,Digital Realty,S&P 500
+DFS,Discover Financial,S&P 500
 DG,Dollar General,S&P 500
 DLTR,Dollar Tree,S&P 500
 D,Dominion Energy,S&P 500
@@ -193,6 +196,7 @@ FIS,Fidelity National Information Services,S&P 500
 FITB,Fifth Third Bancorp,S&P 500
 FSLR,First Solar,S&P 500
 FE,FirstEnergy,S&P 500
+FI,Fiserv,S&P 500
 FMC,FMC Corporation,S&P 500
 F,Ford Motor Company,S&P 500
 FTNT,Fortinet,S&P 500
@@ -224,6 +228,7 @@ HCA,HCA Healthcare,S&P 500
 DOC,Healthpeak Properties,S&P 500
 HSIC,Henry Schein,S&P 500
 HSY,Hershey Company (The),S&P 500
+HES,Hess Corporation,S&P 500
 HPE,Hewlett Packard Enterprise,S&P 500
 HLT,Hilton Worldwide,S&P 500
 HOLX,Hologic,S&P 500
@@ -248,6 +253,7 @@ INTC,Intel,S&P 500
 ICE,Intercontinental Exchange,S&P 500
 IFF,International Flavors & Fragrances,S&P 500
 IP,International Paper,S&P 500
+IPG,Interpublic Group of Companies (The),S&P 500
 INTU,Intuit,S&P 500
 ISRG,Intuitive Surgical,S&P 500
 IVZ,Invesco,S&P 500
@@ -261,6 +267,8 @@ J,Jacobs Solutions,S&P 500
 JNJ,Johnson & Johnson,S&P 500
 JCI,Johnson Controls,S&P 500
 JPM,JPMorgan Chase,S&P 500
+JNPR,Juniper Networks,S&P 500
+K,Kellanova,S&P 500
 KVUE,Kenvue,S&P 500
 KDP,Keurig Dr Pepper,S&P 500
 KEY,KeyCorp,S&P 500
@@ -292,6 +300,7 @@ MTB,M&T Bank,S&P 500
 MPC,Marathon Petroleum,S&P 500
 MKTX,MarketAxess,S&P 500
 MAR,Marriott International,S&P 500
+MMC,Marsh McLennan,S&P 500
 MLM,Martin Marietta Materials,S&P 500
 MAS,Masco,S&P 500
 MA,Mastercard,S&P 500
@@ -352,6 +361,7 @@ PCAR,Paccar,S&P 500
 PKG,Packaging Corporation of America,S&P 500
 PLTR,Palantir Technologies,S&P 500
 PANW,Palo Alto Networks,S&P 500
+PARA,Paramount Global,S&P 500
 PH,Parker Hannifin,S&P 500
 PAYX,Paychex,S&P 500
 PAYC,Paycom,S&P 500
@@ -470,6 +480,7 @@ VMC,Vulcan Materials Company,S&P 500
 WRB,W. R. Berkley Corporation,S&P 500
 GWW,W. W. Grainger,S&P 500
 WAB,Wabtec,S&P 500
+WBA,Walgreens Boots Alliance,S&P 500
 WMT,Walmart,S&P 500
 DIS,Walt Disney Company (The),S&P 500
 WBD,Warner Bros. Discovery,S&P 500
@@ -540,6 +551,7 @@ BMW.DE,BMW,DAX
 BNR.DE,Brenntag,DAX
 CBK.DE,Commerzbank,DAX
 CON.DE,Continental,DAX
+1COV.DE,Covestro,DAX
 DTG.DE,Daimler Truck,DAX
 DBK.DE,Deutsche Bank,DAX
 DB1.DE,Deutsche Börse,DAX
@@ -614,6 +626,7 @@ ADM.L,Admiral Group,FTSE 100
 AAF.L,Airtel Africa,FTSE 100
 AAL.L,Anglo American plc,FTSE 100
 ANTO.L,Antofagasta plc,FTSE 100
+AHT.L,Ashtead Group,FTSE 100
 ABF.L,Associated British Foods,FTSE 100
 AZN.L,AstraZeneca,FTSE 100
 AUTO.L,Auto Trader Group,FTSE 100
@@ -648,6 +661,7 @@ GLEN.L,Glencore,FTSE 100
 GSK.L,GSK plc,FTSE 100
 HLN.L,Haleon,FTSE 100
 HLMA.L,Halma plc,FTSE 100
+HL.L,Hargreaves Lansdown,FTSE 100
 HIK.L,Hikma Pharmaceuticals,FTSE 100
 HSX.L,Hiscox,FTSE 100
 HWDN.L,Howdens Joinery,FTSE 100
@@ -676,6 +690,7 @@ NXT.L,Next plc,FTSE 100
 PSON.L,Pearson plc,FTSE 100
 PSH.L,Pershing Square Holdings,FTSE 100
 PSN.L,Persimmon,FTSE 100
+PHNX.L,Phoenix Group,FTSE 100
 PRU.L,Prudential plc,FTSE 100
 RKT.L,Reckitt,FTSE 100
 REL.L,RELX,FTSE 100
@@ -690,6 +705,7 @@ SMT.L,Scottish Mortgage Investment Trust,FTSE 100
 SGRO.L,Segro,FTSE 100
 SVT.L,Severn Trent,FTSE 100
 SHEL.L,Shell plc,FTSE 100
+SMDS.L,DS Smith,FTSE 100
 SMIN.L,Smiths Group,FTSE 100
 SN.L,Smith & Nephew,FTSE 100
 SPX.L,Spirax Group,FTSE 100

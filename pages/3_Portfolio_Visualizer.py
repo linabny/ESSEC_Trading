@@ -15,6 +15,16 @@ def get_company_name(ticker):
         company = 'N/A'
     return company
 
+def validate_ticker(ticker):
+    """Validate if ticker exists and has data available"""
+    try:
+        data = yf.download(ticker, period='1d', progress=False)
+        if data.empty:
+            return False
+        return True
+    except:
+        return False
+
 # Function to calculate historical portfolio performance
 def calculate_portfolio_performance(tickers, weights, period='1y'):
     data = yf.download(tickers, period=period)['Close']
@@ -248,14 +258,18 @@ def main():
         company_names = []
 
         for ticker in df['Ticker']:
-            if ticker:  #
+            if ticker:
                 try:
+                    if not validate_ticker(ticker):
+                        invalid_tickers.append(ticker)
+                        continue
                     company_name = get_company_name(ticker)
                     if company_name != 'N/A':
                         valid_tickers.append(ticker.upper())
                         company_names.append(company_name)
                     else:
-                        invalid_tickers.append(ticker)
+                        valid_tickers.append(ticker.upper())
+                        company_names.append(ticker.upper())
                 except Exception as e:
                     invalid_tickers.append(ticker)
                     st.error(f"Error verifying ticker {ticker}: {e}")
@@ -331,7 +345,8 @@ def main():
                 "Expected Return", "Volatility", "Sharpe Ratio"
             ]
             metrics_values = [
-                f"{total_weight:.2f}%", f"{average_weight:.2f}%", f"{max_weight:.2f}%", f"{min_weight:.2f}%",
+                f"{total_weight:.0f}%", f"{average_weight:.2f}%", f"{max_weight:.2f}%", f"{min_weight:.2f}%",
+            
                 f"{expected_return*100:.2f}%", f"{volatility*100:.2f}%", f"{sharpe_ratio:.2f}"
             ]
             metrics_descriptions = [
