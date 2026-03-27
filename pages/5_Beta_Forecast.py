@@ -27,15 +27,7 @@ def main():
     st.title("Beta Forecast")
 
     description = (
-        "Beta Forecast is an advanced feature of ESSEC Trading (currently in beta version) that allows users "
-        "to make accurate predictions of stock prices using the Prophet library. "
-        "After selecting a company from an existing list, the user "
-        "can set a forecast horizon (from 30 to 365 days). The application retrieves the "
-        "corresponding historical data and generates forecasts accompanied by confidence intervals. "
-        "A table of key metrics, including current price, minimum, maximum, and average price forecasts, "
-        "is displayed to facilitate analysis. Finally, an intuitive recommendation gauge helps interpret "
-        "the forecasts and make strategic investment decisions. The user can also download the results "
-        "in CSV format for further exploration."
+        "Predict future stock performance using the Facebook Prophet library. Select a stock, set your horizon (30–365 days), and generate forecasts with confidence intervals. Analyze key metrics—including min, max, and average price targets—via our intuitive Recommendation Gauge, then export your results to CSV."
     )
 
     justified_description = f"""

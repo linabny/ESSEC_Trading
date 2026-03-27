@@ -12,16 +12,7 @@ from utils.optimizer_utils import calculate_efficient_frontier, plot_efficient_f
 # Efficient Frontier coded using: https://youtu.be/Isutk-wqJfE?si=a2HVgMUsLGivkm0E
 
 description_page = (
-    "Portfolio Optimizer allows users to retrieve the portfolio "
-    "created in the Portfolio Visualizer section for in-depth analysis. The "
-    "portfolio is summarized through a summary table of the main "
-    "statistics and a chart illustrating the distribution of weights among "
-    "companies. Next, ESSEC Trading calculates the efficient frontier using "
-    "Modern Portfolio Theory to optimize returns. The platform "
-    "then displays the efficient frontier with the current portfolio position "
-    "and proposes an optimal portfolio, either to minimize volatility or to "
-    "maximize the Sharpe ratio. The returns of the different portfolios thus "
-    "obtained are represented graphically over a 10-year time scale."
+    "Analyze and refine your Visualizer portfolio using Modern Portfolio Theory. Generate the Efficient Frontier to find your ideal balance of risk and return. Automatically calculate optimal allocations to minimize volatility or maximize the Sharpe ratio, backed by 10-year historical performance charts."
 )
 
 

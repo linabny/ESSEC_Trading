@@ -44,13 +44,7 @@ def main():
     st.title("Portfolio Forecast")
 
     description = (
-        "Portfolio Forecast extends the forecasting capabilities to your entire portfolios. "
-        "This feature allows you to make accurate predictions of portfolio performance based on "
-        "the Prophet library. You can forecast the price of three different portfolio strategies: "
-        "the original portfolio you created, a minimum volatility portfolio optimized for risk reduction, "
-        "and a maximum Sharpe ratio portfolio optimized for risk-adjusted returns. "
-        "Set your forecast horizon (from 30 to 365 days) to receive predictions with confidence intervals "
-        "and strategic recommendations for each portfolio."
+        "Predict the future of your entire strategy using the Facebook Prophet library. Select a stock, set your horizon (30–365 days), and generate forecasts with confidence intervals. Analyze key metrics—including min, max, and average price targets—via our intuitive Recommendation Gauge, then export your results to CSV. "
     )
 
     justified_description = f"""

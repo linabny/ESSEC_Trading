@@ -7,7 +7,6 @@ import plotly.graph_objs as go
 import numpy as np 
 from utils.graph_utils import plot_performance, plot_pie 
 
-
 def get_company_name(ticker):
     try:
         company = yf.Ticker(ticker).info.get('longName', 'N/A')
@@ -87,7 +86,7 @@ def main():
 
     st.title("Portfolio visualizer")
 
-    description = "Portfolio Visualizer allows users to create and customize their own investment portfolio. The choice of companies can be made by filtering by benchmark indices, searching directly for the name in the search bar, or selecting from those already added to their watch-list. The user must assign a specific weight to each company, corresponding to its percentage in the portfolio. ESSEC Trading then generates a summary table with the main portfolio statistics, historical YTD performance, as well as a chart illustrating the distribution of weights between different companies. The portfolio is automatically saved for later use in the Portfolio Optimizer tab."
+    description = "Build and visualize your custom portfolio. Filter by benchmarks, search by name, or select from your watchlist. Simply assign weights to see real-time YTD performance, key statistics, and asset distribution. Your portfolio is automatically saved for seamless use in the Optimizer."
 
     justified_description = f"""
     <div style='text-align: justify; text-justify: inter-word;'>
