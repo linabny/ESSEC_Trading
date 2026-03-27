@@ -1,30 +1,45 @@
 # Portfolio_Forecast.py
 
-import streamlit as st 
+import streamlit as st
 import yfinance as yf
-import pandas as pd 
+import pandas as pd
 from prophet import Prophet
-import plotly.graph_objects as go 
+import plotly.graph_objects as go
 import datetime as dt
 import numpy as np
 from utils.optimizer_utils import calculate_efficient_frontier, get_risk_free_rate
 
+# Cache functions for performance optimization
 
-def calculate_portfolio_price(tickers, weights, start_date, end_date):
-    """Calculate historical portfolio price based on weights"""
-    stock_data = yf.download(tickers, start=start_date, end=end_date)['Close']
-    
-    # Handle case with single ticker
+@st.cache_data
+def get_historical_data(tickers, start_date, end_date):
+    """Download and clean data only once."""
+    data = yf.download(tickers, start=start_date, end=end_date)['Close']
     if len(tickers) == 1:
-        stock_data = stock_data.to_frame()
+        data = data.to_frame()
+    return data.ffill().bfill()
+
+@st.cache_resource
+def run_prophet_forecast(df_prices, horizon):
+    """ Train model and generate forecast (cached)."""
+    # Prepare Prophet format
+    df_prophet = pd.DataFrame({
+        'ds': df_prices.index.tz_localize(None),
+        'y': df_prices.values
+    })
     
-    # Normalize weights to sum to 1
+    model = Prophet(daily_seasonality=True)
+    model.fit(df_prophet)
+    
+    future = model.make_future_dataframe(periods=horizon)
+    forecast = model.predict(future)
+    return df_prophet, forecast
+
+def calculate_portfolio_price(stock_data, weights):
+    """Calculate historical portfolio price based on weights"""
     weights = np.array(weights) / np.sum(weights)
-    
-    # Calculate portfolio value (assuming $1 initial investment)
     portfolio_value = (stock_data * weights).sum(axis=1)
     return portfolio_value
-
 
 def main():
     # CSS to adjust content area width
@@ -44,7 +59,7 @@ def main():
     st.title("Portfolio Forecast")
 
     description = (
-        "Predict the future of your entire strategy using the Facebook Prophet library. Select a stock, set your horizon (30–365 days), and generate forecasts with confidence intervals. Analyze key metrics—including min, max, and average price targets—via our intuitive Recommendation Gauge, then export your results to CSV. "
+        "Predict the future of your entire strategy using the Facebook Prophet library. Select a stock, set your horizon (1-365 days), and generate forecasts with confidence intervals. Analyze key metrics—including min, max, and average price targets—via our intuitive Recommendation Gauge, then export your results to CSV. "
     )
 
     justified_description = f"""
@@ -56,266 +71,114 @@ def main():
 
     st.write("")
 
-    # Check if portfolio exists
     if 'portfolio' not in st.session_state or st.session_state['portfolio'].empty:
-        st.info(
-            "Please create a portfolio in the **Portfolio Visualizer** section "
-            "before proceeding with portfolio forecasting."
-        )
+        st.info("Please create a portfolio in the **Portfolio Visualizer** section first.")
         return
 
-    # Get portfolio data
+    # Data Setup
     portfolio_data = st.session_state['portfolio']
     tickers = portfolio_data['Ticker'].tolist()
     weights = np.array(portfolio_data['Weight (%)'].tolist()) / 100
-
-    # Allow user to choose the forecast period
-    horizon = st.slider("Forecast Horizon (in days):", min_value=30, max_value=365, value=90)
-
-    # Get current date
-    current_date = str(dt.date.today())
-
+    horizon = st.slider("Forecast Horizon (days):", 1, 365, 90)
+    
     try:
-        # Download historical data for portfolio optimization
-        stock_data = yf.download(tickers, period='10y')['Close']
-        
-        if len(tickers) == 1:
-            stock_data = stock_data.to_frame()
-        
+        # Download historical data for the portfolio
+        hist_start = "2015-01-01"
+        today = dt.date.today().strftime('%Y-%m-%d')
+        stock_data = get_historical_data(tickers, hist_start, today)
+
+        # Calculate returns and covariance for efficient frontier
         returns = stock_data.pct_change().mean() * 252
         cov_matrix = stock_data.pct_change().cov() * 252
-        risk_free_rate = get_risk_free_rate()
-
-        # Calculate efficient frontier to get optimal weights
-        portfolios, min_vol_pf, max_sharpe_pf, _ = calculate_efficient_frontier(
-            returns=returns,
-            cov_matrix=cov_matrix,
-            risk_free_rate=risk_free_rate,
-            portfolio_weights=weights
+        _, min_vol_pf, max_sharpe_pf, _ = calculate_efficient_frontier(
+            returns, cov_matrix, get_risk_free_rate(), weights
         )
 
-        # Extract weights for the three portfolios
-        original_weights = weights
-        min_vol_weights = min_vol_pf.iloc[0:-3].values
-        max_sharpe_weights = max_sharpe_pf.iloc[0:-3].values
-
-        # Dictionary to store forecasts
-        portfolios_dict = {
-            "Original Portfolio": original_weights,
-            "Minimum Volatility Portfolio": min_vol_weights,
-            "Maximum Sharpe Portfolio": max_sharpe_weights
+        strategies = {
+            "Original Portfolio": weights,
+            "Minimum Volatility Portfolio": min_vol_pf.iloc[0:-3].values,
+            "Maximum Sharpe Portfolio": max_sharpe_pf.iloc[0:-3].values
         }
 
-        # Calculate historical prices for each portfolio
-        hist_start_date = "2015-01-01"
-        portfolio_prices = {}
+        tabs = st.tabs(list(strategies.keys()))
 
-        for portfolio_name, portfolio_weights in portfolios_dict.items():
-            portfolio_price = calculate_portfolio_price(tickers, portfolio_weights, hist_start_date, current_date)
-            portfolio_prices[portfolio_name] = portfolio_price
-
-        # Prepare data and make forecasts for each portfolio
-        forecasts = {}
-        predictions_data = {}
-
-        for portfolio_name, portfolio_price in portfolio_prices.items():
-            # Prepare data for Prophet
-            data = pd.DataFrame({
-                'ds': portfolio_price.index,
-                'y': portfolio_price.values
-            })
-            data['ds'] = data['ds'].dt.tz_localize(None)
-
-            # Train Prophet model
-            model = Prophet()
-            model.fit(data)
-
-            # Make forecast
-            future = model.make_future_dataframe(periods=horizon)
-            forecast = model.predict(future)
-
-            forecasts[portfolio_name] = forecast
-            predictions_data[portfolio_name] = {
-                'historical': data,
-                'forecast': forecast,
-                'last_price': portfolio_price.iloc[-1]
-            }
-
-        # Create tabs for each portfolio
-        tab1, tab2, tab3 = st.tabs(["Original Portfolio", "Minimum Volatility Portfolio", "Maximum Sharpe Portfolio"])
-
-        portfolio_names = ["Original Portfolio", "Minimum Volatility Portfolio", "Maximum Sharpe Portfolio"]
-        tabs = [tab1, tab2, tab3]
-
-        for tab, portfolio_name in zip(tabs, portfolio_names):
+        for tab, (name, strat_weights) in zip(tabs, strategies.items()):
             with tab:
-                st.write(f"### {portfolio_name}")
+                st.subheader(f"{name} Analysis")
 
-                # Display portfolio composition
-                if portfolio_name == "Original Portfolio":
-                    current_weights = original_weights
-                elif portfolio_name == "Minimum Volatility Portfolio":
-                    current_weights = min_vol_weights
-                else:
-                    current_weights = max_sharpe_weights
+                # Forecast price series for the portfolio
+                price_series = calculate_portfolio_price(stock_data, strat_weights)
+                hist_df, forecast = run_prophet_forecast(price_series, horizon)
 
-                composition_df = pd.DataFrame({
-                    'Ticker': tickers,
-                    'Weight (%)': current_weights * 100
-                }).sort_values(by='Weight (%)', ascending=False)
-
-                st.write("Portfolio Composition:")
-                st.dataframe(composition_df, use_container_width=True)
-
-                # Get forecast data
-                hist_data = predictions_data[portfolio_name]['historical']
-                forecast_data = predictions_data[portfolio_name]['forecast']
-                last_price = predictions_data[portfolio_name]['last_price']
-
-                # Create figure
                 fig = go.Figure()
+                
+                fig.add_trace(go.Scatter(x=hist_df['ds'], y=hist_df['y'], name="Historical", line=dict(color="black")))
+                
+                future_mask = forecast['ds'] > hist_df['ds'].max()
+                future_df = forecast[future_mask]
+                
+                fig.add_trace(go.Scatter(x=future_df['ds'], y=future_df['yhat'], name="Forecast", line=dict(color="blue")))
+                
+                fig.add_trace(go.Scatter(x=future_df['ds'], y=future_df['yhat_upper'], line=dict(width=0), showlegend=False))
+                fig.add_trace(go.Scatter(x=future_df['ds'], y=future_df['yhat_lower'], fill='tonexty', 
+                                         fillcolor='rgba(173, 216, 230, 0.3)', line=dict(width=0), name="Confidence Interval"))
 
-                # Add historical data
-                fig.add_trace(go.Scatter(
-                    x=hist_data['ds'], y=hist_data['y'],
-                    mode='lines',
-                    name="Historical Data",
-                    line=dict(color="black")
-                ))
+                fig.update_layout(template="plotly_white", height=500, xaxis_title="Date", yaxis_title="Portfolio Value ($)")
+                
+                st.plotly_chart(fig, use_container_width=True, key=f"chart_{name.replace(' ', '_')}")
 
-                # Add forecast
-                fig.add_trace(go.Scatter(
-                    x=forecast_data['ds'], y=forecast_data['yhat'],
-                    mode='lines',
-                    name="Predictions",
-                    line=dict(color="blue")
-                ))
+                # Metrics
+                last_price = price_series.iloc[-1]
+                pred_price = future_df['yhat'].iloc[-1]
+                p_min = future_df['yhat_lower'].iloc[-1]
+                p_max = future_df['yhat_upper'].iloc[-1]
 
-                # Add confidence intervals
-                fig.add_trace(go.Scatter(
-                    x=forecast_data['ds'], y=forecast_data['yhat_upper'],
-                    fill=None,
-                    mode='lines',
-                    line=dict(color='lightblue', dash='dot'),
-                    name="Upper Interval"
-                ))
-                fig.add_trace(go.Scatter(
-                    x=forecast_data['ds'], y=forecast_data['yhat_lower'],
-                    fill='tonexty',
-                    mode='lines',
-                    line=dict(color='lightblue', dash='dot'),
-                    name="Lower Interval"
-                ))
+                st.write("### Prediction Statistics")
+                c1, c2, c3, c4 = st.columns(4)
+                c1.metric("Current Price", f"{last_price:.2f}")
+                c2.metric("Predicted Price", f"{pred_price:.2f}", f"{((pred_price/last_price)-1)*100:.2f}%")
+                c3.metric("Min Forecast", f"{p_min:.2f}")
+                c4.metric("Max Forecast", f"{p_max:.2f}")
 
-                fig.update_layout(
-                    title=f"Portfolio Price Prediction - {portfolio_name}",
-                    height=600,
-                    width=1000,
-                    xaxis_title="Date",
-                    yaxis_title="Portfolio Value ($)",
-                    template="plotly_white"
-                )
+                # Recommandation gauge
+                perc_delta = ((pred_price - last_price) / last_price) * 100
+                level = max(min(50 + perc_delta * 5, 100), 0)
 
-                st.plotly_chart(fig, use_container_width=True)
+                if level >= 80: rec, col = "Strong Buy", "darkgreen"
+                elif level >= 60: rec, col = "Buy", "green"
+                elif level >= 40: rec, col = "Hold", "orange"
+                elif level >= 20: rec, col = "Sell", "red"
+                else: rec, col = "Strong Sell", "darkred"
 
-                # Get prediction metrics
-                last_forecast_date = forecast_data['ds'].iloc[-1]
-                last_forecast_date_str = last_forecast_date.strftime('%Y-%m-%d')
-
-                borne_inf = forecast_data.loc[forecast_data['ds'] == last_forecast_date_str]['yhat_lower'].values[0]
-                borne_sup = forecast_data.loc[forecast_data['ds'] == last_forecast_date_str]['yhat_upper'].values[0]
-                prediction = forecast_data.loc[forecast_data['ds'] == last_forecast_date_str]['yhat'].values[0]
-
-                st.write(f"### Prediction Statistics at {horizon} days")
-                metrics_labels = [
-                    "Current Price", "Predicted Price", "Minimum Predicted Price", "Maximum Predicted Price"
-                ]
-                metrics_values = [
-                    f"{last_price:.2f}", f"{prediction:.2f}", f"{borne_inf:.2f}", f"{borne_sup:.2f}"
-                ]
-
-                num_metrics = len(metrics_labels)
-                cols = st.columns(num_metrics)
-
-                for col, label, value in zip(cols, metrics_labels, metrics_values):
-                    with col:
-                        st.metric(label, value)
-
-                # Calculate percentage variation
-                percentage_delta = ((prediction - last_price) / last_price) * 100
-
-                # Map variation to scale 0-100
-                level = max(min(50 + percentage_delta * 5, 100), 0)
-
-                # Determine recommendation
-                if 80 <= level <= 100:
-                    recommendation = "Strong Buy"
-                    text_color = "darkgreen"
-                elif 60 <= level < 80:
-                    recommendation = "Buy"
-                    text_color = "green"
-                elif 40 <= level < 60:
-                    recommendation = "Hold"
-                    text_color = "orange"
-                elif 20 <= level < 40:
-                    recommendation = "Sell"
-                    text_color = "red"
-                else:
-                    recommendation = "Strong Sell"
-                    text_color = "darkred"
-
-                num_levels = 100
-
-                # Create gauge
                 fig_gauge = go.Figure(go.Indicator(
-                    mode="gauge",
-                    value=level,
-                    title={'text': "Recommendation"},
-                    gauge={
-                        'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "black"},
-                        'bar': {'color': "black", 'thickness': 0.2},
-                        'steps': [
-                            {'range': [i, i + 100 / num_levels],
-                            'color': f"rgb({int(255 - (i * 2.55))},{int(i * 2.55)},0)"}
-                            for i in np.linspace(0, 100, num_levels)
-                        ],
-                        'threshold': {
-                            'line': {'color': "black", 'width': 4},
-                            'thickness': 0.75,
-                            'value': level
-                        }
-                    }
+                    mode="gauge", value=level,
+                    title={'text': f"Recommendation: <b>{rec}</b>", 'font': {'color': col, 'size': 24}},
+                    gauge={'axis': {'range': [0, 100]}, 
+                           'bar': {'color': "black"},
+                           'steps': [
+                               {'range': [0, 20], 'color': "darkred"},
+                               {'range': [20, 40], 'color': "red"},
+                               {'range': [40, 60], 'color': "orange"},
+                               {'range': [60, 80], 'color': "green"},
+                               {'range': [80, 100], 'color': "darkgreen"}]
+                          }
                 ))
+                fig_gauge.update_layout(height=350, margin=dict(t=50, b=0))
 
-                fig_gauge.add_trace(go.Scatter(
-                    x=[0.5],
-                    y=[-1.2],
-                    text=[f"<b>{recommendation}</b>"],
-                    mode="text",
-                    textfont=dict(size=50, color=text_color),
-                    showlegend=False
-                ))
+                st.plotly_chart(fig_gauge, use_container_width=True, key=f"gauge_{name.replace(' ', '_')}")
 
-                fig_gauge.update_layout(
-                    xaxis=dict(visible=False),
-                    yaxis=dict(visible=False),
-                    paper_bgcolor="white"
-                )
-
-                st.plotly_chart(fig_gauge, use_container_width=True)
-
-                # Download button
-                csv = forecast_data.to_csv(index=False)
+                # Download
+                csv = forecast.to_csv(index=False)
                 st.download_button(
-                    label=f"Download Forecasts as CSV",
+                    label="Download Full Forecast Data (CSV)",
                     data=csv,
-                    file_name=f"forecasts_{portfolio_name.replace(' ', '_')}.csv",
-                    mime='text/csv'
+                    file_name=f"forecast_{name.lower().replace(' ', '_')}.csv",
+                    mime='text/csv',
+                    key=f"btn_{name.replace(' ', '_')}" 
                 )
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 if __name__ == "__main__":
     main()

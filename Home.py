@@ -39,7 +39,8 @@ st.markdown('<h2 class="subtitle">A new way of investing</h2>', unsafe_allow_htm
 
 st.markdown('<div class="section" data-aos="fade-up">', unsafe_allow_html=True)
 
-intro = "Welcome to ESSEC Trading. \n Transform your financial strategies into success with our intuitive, high-performance platform. \n Leverage professional-grade modules—Stock Picking, Portfolio Optimizer, and Beta Forecast—to analyze, simulate, and refine your investments using real-time Yahoo Finance data.\n ESSEC Trading: A new way to invest."
+intro = "Welcome to ESSEC Trading.\n\nTransform your financial strategies into success with our intuitive, high-performance platform.\nLeverage professional-grade modules—Stock Picking, Portfolio Optimizer, and Stock/Portfolio Forecast—to analyze, simulate, and refine your investments using real-time Yahoo Finance data."
+
 
 justified_intro = f"""
     <div style='text-align: justify; text-justify: inter-word;'>
@@ -56,7 +57,7 @@ services = [
         {"name": "Stock Picking", "description": "The solution for building a tailor-made portfolio, with reliable data for informed decisions.", "icon": "📈"},
         {"name": "Portfolio Visualizer", "description": "Analyze your portfolio with clear visual tools and powerful insights to maximize your performance.", "icon": "📊"},
         {"name": "Portfolio Optimizer", "description": "Optimize your portfolio through the efficient frontier, to maximize your returns and reduce your risks.", "icon": "⚙️"},
-        {"name": "Beta Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💰"},
+        {"name": "Stock Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💰"},
         {"name": "Portfolio Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💼"}
     ]
 
