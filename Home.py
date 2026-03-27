@@ -39,7 +39,7 @@ st.markdown('<h2 class="subtitle">A new way of investing</h2>', unsafe_allow_htm
 
 st.markdown('<div class="section" data-aos="fade-up">', unsafe_allow_html=True)
 
-intro = "Welcome to ESSEC Trading, the platform designed to transform your financial strategies into true success.\n\nCombining cutting-edge technology with accessibility, ESSEC Trading puts powerful and intuitive tools in your hands, perfect for both novice and expert investors looking to maximize their potential. Designed to provide a smooth experience, this dynamic platform, developed with Streamlit, stands out with its modern and user-friendly interface, making each feature simple to access and pleasant to use.\n\nThrough innovative modules such as Stock Picking, Portfolio Visualizer, Portfolio Optimizer, and Beta Forecast, it offers you a complete toolkit to analyze, create, simulate, and optimize your investments with precision. Drawing on reliable data from recognized sources such as Yahoo Finance, ESSEC Trading guarantees up-to-date and relevant information, helping you make informed decisions. Through the integration of modern financial theories and advanced simulations, you can explore new opportunities and refine your portfolios in an environment entirely designed to meet your needs.\n\nJoin ESSEC Trading now and give a new dimension to your investments.\n\nESSEC Trading: a new way of investing."
+intro = "Welcome to ESSEC Trading. \n Transform your financial strategies into success with our intuitive, high-performance platform. \n Leverage professional-grade modules—Stock Picking, Portfolio Optimizer, and Beta Forecast—to analyze, simulate, and refine your investments using real-time Yahoo Finance data.\n ESSEC Trading: A new way to invest."
 
 justified_intro = f"""
     <div style='text-align: justify; text-justify: inter-word;'>
@@ -56,7 +56,8 @@ services = [
         {"name": "Stock Picking", "description": "The solution for building a tailor-made portfolio, with reliable data for informed decisions.", "icon": "📈"},
         {"name": "Portfolio Visualizer", "description": "Analyze your portfolio with clear visual tools and powerful insights to maximize your performance.", "icon": "📊"},
         {"name": "Portfolio Optimizer", "description": "Optimize your portfolio through the efficient frontier, to maximize your returns and reduce your risks.", "icon": "⚙️"},
-        {"name": "Beta Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💰"}
+        {"name": "Beta Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💰"},
+        {"name": "Portfolio Forecast", "description": "Our innovation space, anticipate stock prices with advanced forecasts to optimize your investment decisions.", "icon": "💼"}
     ]
 
 num_services = len(services)
