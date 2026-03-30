@@ -12,9 +12,9 @@ from utils.styles_utils import apply_styles
 def get_stock_data(ticker, start_date, end_date):
     """Download and clean stock data once."""
     data = yf.download(ticker, start=start_date, end=end_date)
-    if data.empty:
+    if data.empty: # type: ignore
         return pd.DataFrame()
-    data = data[['Close']].reset_index()
+    data = data[['Close']].reset_index() # type: ignore
     data.columns = ['ds', 'y']
     data['ds'] = data['ds'].dt.tz_localize(None)
     return data.ffill().bfill()
@@ -22,7 +22,7 @@ def get_stock_data(ticker, start_date, end_date):
 @st.cache_resource
 def run_beta_forecast(df, horizon):
     """Train Prophet model and generate forecast (cached)."""
-    m = Prophet(daily_seasonality=True)
+    m = Prophet(daily_seasonality=True) # type: ignore
     m.fit(df)
     future = m.make_future_dataframe(periods=horizon)
     forecast = m.predict(future)
@@ -147,7 +147,7 @@ def main():
         st.download_button(
             label="Download Forecasts as CSV",
             data=csv,
-            file_name=f"forecasts_{company.replace(' ', '_')}.csv",
+            file_name=f"forecasts_{company.replace(' ', '_')}.csv", # type: ignore
             mime='text/csv'
         )
 
