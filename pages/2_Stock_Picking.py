@@ -4,24 +4,14 @@ import streamlit as st
 import pandas as pd
 import yfinance as yf
 import plotly.graph_objs as go
+from utils.styles_utils import apply_styles
 
 def main():
     if 'watchlist' not in st.session_state:
         st.session_state.watchlist = []
     
-    # CSS to adjust content area width
-    st.markdown(
-        """
-        <style>
-        div.block-container {
-            max-width: 90%;
-            margin: auto;
-            padding: 1rem;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Apply centralized styles
+    apply_styles()
 
     df = pd.read_csv("Data/data_trading.csv")
     
@@ -195,20 +185,6 @@ def main():
                     with col:
                         st.metric(label=ratio, value=details["value"])
                         st.caption(details["description"])
-    
-                # RECENT NEWS - CHECK IF WE WANT TO INCLUDE OR NOT
-                # st.markdown("### Recent News")
-                # news = stock.news
-                # if news:
-                #     for article in news[:5]:  # Display the latest 5 news
-                #         title = article.get('title', 'No Title')
-                #         link = article.get('link', '#')
-                #         summary = article.get('summary', 'No summary available.')
-                #         st.markdown(f"**[{title}]({link})**")
-                #         st.write(summary)
-                #         st.write("---")
-                # else:
-                #     st.write("No news available for this stock.")
     
             else:
                 st.error("Data for this ticker is not available.")

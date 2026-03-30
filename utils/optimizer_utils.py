@@ -1,5 +1,6 @@
 # Utils for 'Portfolio Optimizer' page
 
+import os
 import pandas as pd
 import yfinance as yf
 import plotly.graph_objs as go
@@ -37,15 +38,17 @@ def calculate_portfolio_performance(tickers, weights, period='1y'):
     return portfolio_cumulative, portfolio_returns
 
 
-def get_risk_free_rate(api_key="f1f1a2d3abcf1f08e76d3bc4fc1efd19"):
+def get_risk_free_rate(api_key=None):
     """
     Retrieves the risk-free rate (10-year bond yield) from the FRED API.
 
     If an error occurs, returns a default rate of 2%.
 
-    :param api_key: API key for accessing the FRED API.
+    :param api_key: API key for accessing the FRED API. If None, uses FRED_API_KEY env variable.
     :return: Risk-free rate as a float (e.g., 0.02 for 2%).
     """
+    if api_key is None:
+        api_key = os.getenv('FRED_API_KEY', 'f1f1a2d3abcf1f08e76d3bc4fc1efd19')
     url = 'https://api.stlouisfed.org/fred/series/observations'
     params = {
         'series_id': 'DGS10',

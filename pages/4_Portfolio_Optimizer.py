@@ -8,6 +8,7 @@ import numpy as np
 from utils.graph_utils import plot_performance, plot_pie
 from utils.optimizer_utils import calculate_portfolio_performance, get_risk_free_rate
 from utils.optimizer_utils import calculate_efficient_frontier, plot_efficient_frontier, plot_portfolio_performance
+from utils.styles_utils import apply_styles
 
 # Efficient Frontier coded using: https://youtu.be/Isutk-wqJfE?si=a2HVgMUsLGivkm0E
 
@@ -18,19 +19,8 @@ description_page = (
 
 def main():
 
-    # CSS to adjust content area width
-    st.markdown(
-        """
-        <style>
-        div.block-container {
-            max-width: 90%;
-            margin: auto;
-            padding: 1rem;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Apply centralized styles
+    apply_styles()
 
     # Header of the page
     st.title("Portfolio Optimizer")
@@ -108,7 +98,7 @@ def main():
                 if volatility != 0:
                     sharpe_ratio = (expected_return - risk_free_rate) / volatility
                 else:
-                    np.nan
+                    sharpe_ratio = np.nan
 
                 st.write("### Portfolio Statistics")
                 metrics_labels = [

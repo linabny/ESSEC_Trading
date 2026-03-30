@@ -6,6 +6,7 @@ import pandas as pd
 from prophet import Prophet
 import plotly.graph_objects as go
 import datetime as dt
+from utils.styles_utils import apply_styles
 
 @st.cache_data
 def get_stock_data(ticker, start_date, end_date):
@@ -28,15 +29,8 @@ def run_beta_forecast(df, horizon):
     return forecast
 
 def main():
-    # CSS to adjust content area width
-    st.markdown(
-        """
-        <style>
-        div.block-container { max-width: 90%; margin: auto; padding: 1rem; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Apply centralized styles
+    apply_styles()
 
     st.title("Stock Forecast")
 

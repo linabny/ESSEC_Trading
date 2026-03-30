@@ -74,8 +74,6 @@ for i in range(0, num_services, 2):
                         <div class='service-icon'>{service['icon']}</div>
                         <h3>{service['name']}</h3>
                         <p>{service['description']}</p>
-                        <!-- Removed "Choose" button -->
-                        <!--<button class='button'>Choose</button>-->
                     </div>
                     """, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)  

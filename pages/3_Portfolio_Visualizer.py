@@ -5,7 +5,9 @@ import streamlit as st
 import yfinance as yf
 import plotly.graph_objs as go
 import numpy as np 
-from utils.graph_utils import plot_performance, plot_pie 
+from utils.graph_utils import plot_performance, plot_pie
+from utils.optimizer_utils import calculate_portfolio_performance
+from utils.styles_utils import apply_styles 
 
 def get_company_name(ticker):
     try:
@@ -23,17 +25,6 @@ def validate_ticker(ticker):
         return True
     except:
         return False
-
-# Function to calculate historical portfolio performance
-def calculate_portfolio_performance(tickers, weights, period='1y'):
-    data = yf.download(tickers, period=period)['Close']
-    if isinstance(data, pd.Series):  
-        data = data.to_frame()  # CASE WHERE THERE IS ONLY ONE TICKER 
-    returns = data.pct_change().dropna()
-    weighted_returns = returns.multiply(weights, axis=1)
-    portfolio_returns = weighted_returns.sum(axis=1)
-    portfolio_cumulative = (1 + portfolio_returns).cumprod()
-    return portfolio_cumulative, portfolio_returns
 
 # Initialize lists in session_state
 if 'tickers' not in st.session_state:
@@ -70,19 +61,8 @@ df_companies = pd.read_csv("Data/data_trading.csv")
 
 def main():
     
-    #CSS to adjust content area width
-    st.markdown(
-        """
-        <style>
-        div.block-container {
-            max-width: 90%;
-            margin: auto;
-            padding: 1rem;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Apply centralized styles
+    apply_styles()
 
     st.title("Portfolio visualizer")
 
@@ -135,10 +115,8 @@ def main():
         ticker = st.session_state.tickers[i]
         matching_rows = filtered_companies[filtered_companies["Ticker"] == ticker]
         
-        #Debug watchlist option
-        #We calculate the default index of the selectbox.
-        #If there is a match, we position on the matching company
-        #Otherwise, we'll position on the first option (""), but we don't empty the ticker.
+        # Set default selectbox position to matching company if available
+        # Otherwise position on empty option (""), but keep the ticker value
         default_index = 0
         companies_list = [""] + filtered_companies["Company"].tolist()
         if not matching_rows.empty:
@@ -344,9 +322,9 @@ def main():
                 "Expected Return", "Volatility", "Sharpe Ratio"
             ]
             metrics_values = [
-                f"{total_weight:.0f}%", f"{average_weight:.2f}%", f"{max_weight:.2f}%", f"{min_weight:.2f}%",
+                f"{total_weight:.0f}%", f"{average_weight:.1f}%", f"{max_weight:.1f}%", f"{min_weight:.1f}%",
             
-                f"{expected_return*100:.2f}%", f"{volatility*100:.2f}%", f"{sharpe_ratio:.2f}"
+                f"{expected_return*100:.1f}%", f"{volatility*100:.1f}%", f"{sharpe_ratio:.2f}"
             ]
             metrics_descriptions = [
                 "The sum of weights must be 100%.", "", "", "",

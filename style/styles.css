@@ -179,5 +179,12 @@ td {
     padding: 20px 0;
 }
 
+/* Container width adjustment for better readability */
+div.block-container {
+    max-width: 90%;
+    margin: auto;
+    padding: 1rem;
+}
+
 /* AOS (Animations) */
 @import url('https://unpkg.com/aos@2.3.4/dist/aos.css');

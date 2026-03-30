@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import datetime as dt
 import numpy as np
 from utils.optimizer_utils import calculate_efficient_frontier, get_risk_free_rate
+from utils.styles_utils import apply_styles
 
 # Cache functions for performance optimization
 
@@ -42,19 +43,8 @@ def calculate_portfolio_price(stock_data, weights):
     return portfolio_value
 
 def main():
-    # CSS to adjust content area width
-    st.markdown(
-        """
-        <style>
-        div.block-container {
-            max-width: 90%;
-            margin: auto;
-            padding: 1rem;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Apply centralized styles
+    apply_styles()
 
     st.title("Portfolio Forecast")
 
