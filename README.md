@@ -6,11 +6,20 @@
 
 ---
 
-## Installation
+## Setup & Installation
 
-Before running the application, you need to install the required dependencies.
+### 1. Clone the Repository
 
-Open your terminal and run:
+Open your terminal/PowerShell and clone the repository:
+
+```bash
+git clone https://github.com/linabny/ESSEC_Trading.git
+cd ESSEC_Trading
+```
+
+### 2. Install Dependencies
+
+In the same terminal, install the required dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -20,7 +29,7 @@ This will install all necessary packages including pandas, yfinance, streamlit, 
 
 ---
 
-## Running the Application
+## 3. Running the Application
 
 Once the dependencies are installed, launch the platform by running:
 
