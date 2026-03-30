@@ -163,13 +163,14 @@ def clean_ibex35(df_ibex35):
     return df_ibex35
 
 
-def map_index(df):
+def map_index(df, save=False):
     """
     Associates stock indices with their countries, calculates the distribution of companies by country,
     and generates an interactive map with the visualized data.
 
     Arguments:
     - df (pandas.DataFrame): DataFrame containing the indices.
+    - save (bool): If True, saves the map to 'index.html'. Default is False.
 
     Returns:
     - folium.Map: Interactive map with markers for companies by country.
@@ -218,7 +219,8 @@ def map_index(df):
                 fill_color='blue'
             ).add_to(map)
 
-    # Save the map
-    map.save('index.html')
+    # Save the map only if necessary
+    if save:
+        map.save('index.html')
 
     return map
