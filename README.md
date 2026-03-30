@@ -61,7 +61,9 @@ Located in the `pages/` folder, these modules provide specific functionalities:
 
 - **`4_Portfolio_Optimizer.py`** - Portfolio optimization module. Uses advanced algorithms to optimize your portfolio allocation for maximum returns or minimal risk based on your preferences.
 
-- **`5_Beta_Forecast.py`** - Beta forecasting module. Predicts beta coefficients and market risk metrics to help you understand portfolio volatility and systematic risk.
+- **`5_Stock_Forecast.py`** - Stock forecasting module. Predicts individual stock prices using Prophet time series forecasting. Generates price targets with confidence intervals to help you anticipate price movements.
+
+- **`6_Portfolio_Forecast.py`** - Portfolio forecasting module. Forecasts multi-stock portfolio performance using Prophet. Aggregates individual stock predictions to provide portfolio-level price projections and performance simulations.
 
 ### Data Folder (`Data/`)
 
@@ -88,7 +90,8 @@ Located in the `pages/` folder, these modules provide specific functionalities:
 ✓ **Stock Picking** - Analyze and select individual stocks  
 ✓ **Portfolio Visualization** - View and analyze portfolio performance  
 ✓ **Portfolio Optimization** - Optimize asset allocation  
-✓ **Beta Forecasting** - Predict market risk metrics  
+✓ **Stock Forecast** - Predict individual stock prices  
+✓ **Portfolio Forecast** - Predict multi-stock portfolio performance  
 
 ---
 
@@ -101,12 +104,6 @@ Located in the `pages/` folder, these modules provide specific functionalities:
 - **NumPy** - Numerical computations
 - **Prophet** - Time series forecasting
 - **Folium** - Geographic mapping
-
----
-
-## License
-
-This project was developed at ESSEC Business School.
 
 ---
 
