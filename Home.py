@@ -1,5 +1,6 @@
 import streamlit as st
 
+# ALL CSS AND HTML CONTENT IN THIS PROJECT WAS ENTIRELY CREATED BY CHATGPT
 # Streamlit code was created with the help of https://docs.streamlit.io/ documentation
 
 st.set_page_config(
