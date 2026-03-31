@@ -20,7 +20,7 @@ def validate_ticker(ticker):
     """Validate if ticker exists and has data available"""
     try:
         data = yf.download(ticker, period='1d', progress=False)
-        if data.empty:
+        if data.empty: # type : ignore
             return False
         return True
     except:
@@ -261,12 +261,12 @@ def main():
             portfolio = {
                 'Ticker': valid_tickers,
                 'Company Name': company_names,
-                'Weight (%)': [df.loc[df['Ticker'] == ticker, 'Weight (%)'].values[0] for ticker in valid_tickers]
+                'Weight (%)': [df.loc[df['Ticker'] == ticker, 'Weight (%)'].values[0] for ticker in valid_tickers] # type : ignore
             }
             portfolio_df = pd.DataFrame(portfolio)
             for i in range(len(portfolio_df)):
                 portfolio_df.loc[i, 'Industry'] = yf.Ticker(portfolio_df.loc[i, 'Ticker']).info.get('industry', 'N/A')
-            grouped_by_industry = portfolio_df.groupby('Industry')['Weight (%)'].apply(np.sum).reset_index()
+            grouped_by_industry = portfolio_df.groupby('Industry')['Weight (%)'].apply(np.sum).reset_index() # type : ignore
 
             #Portfolio metrics
             total_weight = portfolio_df['Weight (%)'].sum()

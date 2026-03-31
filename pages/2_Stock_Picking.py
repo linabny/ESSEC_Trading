@@ -35,7 +35,7 @@ def main():
         "Choose one or more indices",
         options=indices,
         default=indices 
-    )##
+    )
 
     if selected_indices:
         filtered_companies = df[df['Ind'].isin(selected_indices)]
