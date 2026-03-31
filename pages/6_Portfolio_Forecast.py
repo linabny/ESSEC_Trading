@@ -7,36 +7,37 @@ from prophet import Prophet
 import plotly.graph_objects as go
 import datetime as dt
 import numpy as np
+from typing import Tuple
 from utils.optimizer_utils import calculate_efficient_frontier, get_risk_free_rate
 from utils.styles_utils import apply_styles
 
 # Cache functions for performance optimization
 
 @st.cache_data
-def get_historical_data(tickers, start_date, end_date):
+def get_historical_data(tickers: list[str], start_date: str, end_date: str) -> pd.DataFrame:
     """Download and clean data only once."""
-    data = yf.download(tickers, start=start_date, end=end_date)['Close']
-    if len(tickers) == 1:
+    data = yf.download(tickers, start=start_date, end=end_date, progress=False)['Close']  # type: ignore
+    if isinstance(data, pd.Series):
         data = data.to_frame()
     return data.ffill().bfill()
 
 @st.cache_resource
-def run_prophet_forecast(df_prices, horizon):
+def run_prophet_forecast(df_prices: pd.Series, horizon: int) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """ Train model and generate forecast (cached)."""
     # Prepare Prophet format
     df_prophet = pd.DataFrame({
-        'ds': df_prices.index.tz_localize(None),
+        'ds': pd.to_datetime(df_prices.index).tz_localize(None),
         'y': df_prices.values
     })
     
-    model = Prophet(daily_seasonality=True)
+    model = Prophet(daily_seasonality=True) # type: ignore
     model.fit(df_prophet)
     
     future = model.make_future_dataframe(periods=horizon)
     forecast = model.predict(future)
     return df_prophet, forecast
 
-def calculate_portfolio_price(stock_data, weights):
+def calculate_portfolio_price(stock_data: pd.DataFrame, weights: np.ndarray) -> pd.Series:
     """Calculate historical portfolio price based on weights"""
     weights = np.array(weights) / np.sum(weights)
     portfolio_value = (stock_data * weights).sum(axis=1)
@@ -86,8 +87,8 @@ def main():
 
         strategies = {
             "Original Portfolio": weights,
-            "Minimum Volatility Portfolio": min_vol_pf.iloc[0:-3].values,
-            "Maximum Sharpe Portfolio": max_sharpe_pf.iloc[0:-3].values
+            "Minimum Volatility Portfolio": min_vol_pf.iloc[:-3].values,
+            "Maximum Sharpe Portfolio": max_sharpe_pf.iloc[:-3].values
         }
 
         tabs = st.tabs(list(strategies.keys()))
@@ -119,9 +120,9 @@ def main():
 
                 # Metrics
                 last_price = price_series.iloc[-1]
-                pred_price = future_df['yhat'].iloc[-1]
-                p_min = future_df['yhat_lower'].iloc[-1]
-                p_max = future_df['yhat_upper'].iloc[-1]
+                pred_price = future_df['yhat'].values[-1]
+                p_min = future_df['yhat_lower'].values[-1]
+                p_max = future_df['yhat_upper'].values[-1]
 
                 st.write("### Prediction Statistics")
                 c1, c2, c3, c4 = st.columns(4)

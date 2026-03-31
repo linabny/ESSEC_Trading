@@ -5,6 +5,7 @@ import streamlit as st
 import yfinance as yf
 import plotly.graph_objs as go
 import numpy as np 
+import time
 from utils.graph_utils import plot_performance, plot_pie
 from utils.optimizer_utils import calculate_portfolio_performance
 from utils.styles_utils import apply_styles 
@@ -19,11 +20,11 @@ def get_company_name(ticker):
 def validate_ticker(ticker):
     """Validate if ticker exists and has data available"""
     try:
-        data = yf.download(ticker, period='1d', progress=False)
-        if data.empty: # type : ignore
+        data = yf.download(ticker, period='1d', progress=False, timeout=5)
+        if data is None or data.empty:  # type: ignore
             return False
         return True
-    except:
+    except Exception:
         return False
 
 # Initialize lists in session_state
@@ -234,12 +235,13 @@ def main():
         invalid_tickers = []
         company_names = []
 
-        for ticker in df['Ticker']:
+        for idx, ticker in enumerate(df['Ticker']):
             if ticker:
                 try:
                     if not validate_ticker(ticker):
                         invalid_tickers.append(ticker)
                         continue
+                    time.sleep(0.5)  # Add delay to avoid rate limiting
                     company_name = get_company_name(ticker)
                     if company_name != 'N/A':
                         valid_tickers.append(ticker.upper())
@@ -247,6 +249,7 @@ def main():
                     else:
                         valid_tickers.append(ticker.upper())
                         company_names.append(ticker.upper())
+                    time.sleep(0.5)  # Add delay between requests
                 except Exception as e:
                     invalid_tickers.append(ticker)
                     st.error(f"Error verifying ticker {ticker}: {e}")
@@ -264,8 +267,15 @@ def main():
                 'Weight (%)': [df.loc[df['Ticker'] == ticker, 'Weight (%)'].values[0] for ticker in valid_tickers] # type : ignore
             }
             portfolio_df = pd.DataFrame(portfolio)
+            
+            # Add delay to avoid rate limiting when fetching industry data
             for i in range(len(portfolio_df)):
-                portfolio_df.loc[i, 'Industry'] = yf.Ticker(portfolio_df.loc[i, 'Ticker']).info.get('industry', 'N/A')
+                try:
+                    time.sleep(0.5)  # Add delay between requests
+                    portfolio_df.loc[i, 'Industry'] = yf.Ticker(portfolio_df.loc[i, 'Ticker']).info.get('industry', 'N/A')
+                except Exception:
+                    portfolio_df.loc[i, 'Industry'] = 'N/A'
+            
             grouped_by_industry = portfolio_df.groupby('Industry')['Weight (%)'].apply(np.sum).reset_index() # type : ignore
 
             #Portfolio metrics
